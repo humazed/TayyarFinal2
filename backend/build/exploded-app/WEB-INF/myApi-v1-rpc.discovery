@@ -1,0 +1,953 @@
+{
+ "kind": "discovery#rpcDescription",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/EPm4AlQyGY1xv3eLmDHWXVtvu_I\"",
+ "discoveryVersion": "v1",
+ "id": "myApi:v1",
+ "name": "myApi",
+ "version": "v1",
+ "description": "This is an API",
+ "ownerDomain": "backend",
+ "ownerName": "backend",
+ "icons": {
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+ },
+ "protocol": "rpc",
+ "rootUrl": "https://myApplicationId.appspot.com/_ah/api/",
+ "rpcUrl": "https://myApplicationId.appspot.com/_ah/api/rpc",
+ "rpcPath": "/_ah/api/rpc",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "Category": {
+   "id": "Category",
+   "type": "object",
+   "properties": {
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_MerchantView": {
+   "id": "CollectionResponse_MerchantView",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "MerchantView"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "Customer": {
+   "id": "Customer",
+   "type": "object",
+   "properties": {
+    "currentLocation": {
+     "$ref": "Location"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURl": {
+     "type": "string"
+    },
+    "mainAddress": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "numberOfOrders": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "totalAmountOfMoneySpent": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  },
+  "Driver": {
+   "id": "Driver",
+   "type": "object",
+   "properties": {
+    "balance": {
+     "type": "number",
+     "format": "double"
+    },
+    "currentLocation": {
+     "$ref": "Location"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "idle": {
+     "type": "boolean"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "imageURl": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "rate": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "vehicle": {
+     "type": "string"
+    }
+   }
+  },
+  "Item": {
+   "id": "Item",
+   "type": "object",
+   "properties": {
+    "available": {
+     "type": "boolean"
+    },
+    "basePrice": {
+     "type": "number",
+     "format": "double"
+    },
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "ItemCollection": {
+   "id": "ItemCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Item"
+     }
+    }
+   }
+  },
+  "Location": {
+   "id": "Location",
+   "type": "object"
+  },
+  "MenuView": {
+   "id": "MenuView",
+   "type": "object"
+  },
+  "Merchant": {
+   "id": "Merchant",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "city": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "MerchantCollection": {
+   "id": "MerchantCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Merchant"
+     }
+    }
+   }
+  },
+  "MerchantView": {
+   "id": "MerchantView",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "merchantID": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    }
+   }
+  },
+  "MerchantViewCollection": {
+   "id": "MerchantViewCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "MerchantView"
+     }
+    }
+   }
+  },
+  "Pharmacy": {
+   "id": "Pharmacy",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "city": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "PharmacyItem": {
+   "id": "PharmacyItem",
+   "type": "object",
+   "properties": {
+    "available": {
+     "type": "boolean"
+    },
+    "basePrice": {
+     "type": "number",
+     "format": "double"
+    },
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "Restaurant": {
+   "id": "Restaurant",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "city": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "RestaurantItem": {
+   "id": "RestaurantItem",
+   "type": "object",
+   "properties": {
+    "available": {
+     "type": "boolean"
+    },
+    "basePrice": {
+     "type": "number",
+     "format": "double"
+    },
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "RestaurantItemOption": {
+   "id": "RestaurantItemOption",
+   "type": "object",
+   "properties": {
+    "addedPrice": {
+     "type": "number",
+     "format": "double"
+    },
+    "available": {
+     "type": "boolean"
+    },
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    },
+    "required": {
+     "type": "boolean"
+    }
+   }
+  }
+ },
+ "methods": {
+  "myApi.addCategoryToMerchant": {
+   "id": "myApi.addCategoryToMerchant",
+   "parameters": {
+    "categoryID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "merchantID",
+    "categoryID"
+   ],
+   "returns": {
+    "$ref": "Merchant"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.addItemToCategory": {
+   "id": "myApi.addItemToCategory",
+   "parameters": {
+    "categoryID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "itemID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "categoryID",
+    "itemID"
+   ],
+   "returns": {
+    "$ref": "Category"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.addOptionToRestaurantItem": {
+   "id": "myApi.addOptionToRestaurantItem",
+   "parameters": {
+    "itemID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "optionID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "itemID",
+    "optionID"
+   ],
+   "returns": {
+    "$ref": "Item"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.create20Merchants": {
+   "id": "myApi.create20Merchants",
+   "returns": {
+    "$ref": "MerchantCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createCategory": {
+   "id": "myApi.createCategory",
+   "parameters": {
+    "description": {
+     "type": "string",
+     "required": true
+    },
+    "imageURL": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "description",
+    "imageURL"
+   ],
+   "returns": {
+    "$ref": "Category"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createCustomer": {
+   "id": "myApi.createCustomer",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true
+    },
+    "mainAddress": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    },
+    "phone": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "mainAddress",
+    "phone"
+   ],
+   "returns": {
+    "$ref": "Customer"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createDriver": {
+   "id": "myApi.createDriver",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true
+    },
+    "imageURL": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    },
+    "phone": {
+     "type": "string",
+     "required": true
+    },
+    "vehicle": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "phone",
+    "vehicle",
+    "imageURL"
+   ],
+   "returns": {
+    "$ref": "Driver"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createOption": {
+   "id": "myApi.createOption",
+   "allowGet": true,
+   "parameters": {
+    "available": {
+     "type": "boolean",
+     "required": true
+    },
+    "description": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    },
+    "price": {
+     "type": "number",
+     "required": true,
+     "format": "double"
+    },
+    "required": {
+     "type": "boolean",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "available",
+    "description",
+    "name",
+    "price",
+    "required"
+   ],
+   "returns": {
+    "$ref": "RestaurantItemOption"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createPharmacy": {
+   "id": "myApi.createPharmacy",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true
+    },
+    "imageURL": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    },
+    "phone": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "phone",
+    "imageURL"
+   ],
+   "returns": {
+    "$ref": "Pharmacy"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createPharmacyItem": {
+   "id": "myApi.createPharmacyItem",
+   "parameters": {
+    "basePrice": {
+     "type": "number",
+     "required": true,
+     "format": "double"
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "basePrice"
+   ],
+   "returns": {
+    "$ref": "PharmacyItem"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createRestaurant": {
+   "id": "myApi.createRestaurant",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true
+    },
+    "imageURL": {
+     "type": "string",
+     "required": true
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    },
+    "phone": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "phone",
+    "imageURL"
+   ],
+   "returns": {
+    "$ref": "Restaurant"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.createRestaurantItem": {
+   "id": "myApi.createRestaurantItem",
+   "parameters": {
+    "basePrice": {
+     "type": "number",
+     "required": true,
+     "format": "double"
+    },
+    "name": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "basePrice"
+   ],
+   "returns": {
+    "$ref": "RestaurantItem"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getItemsOfCategory": {
+   "id": "myApi.getItemsOfCategory",
+   "allowGet": true,
+   "parameters": {
+    "categoryID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "categoryID"
+   ],
+   "returns": {
+    "$ref": "ItemCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getListOfMerchantsViews": {
+   "id": "myApi.getListOfMerchantsViews",
+   "allowGet": true,
+   "parameters": {
+    "cursorStr": {
+     "type": "string"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getMerchantByID": {
+   "id": "myApi.getMerchantByID",
+   "allowGet": true,
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "returns": {
+    "$ref": "Merchant"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getMerchantByName": {
+   "id": "myApi.getMerchantByName",
+   "allowGet": true,
+   "parameters": {
+    "name": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "name"
+   ],
+   "returns": {
+    "$ref": "MerchantViewCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getMerchantMenuByID": {
+   "id": "myApi.getMerchantMenuByID",
+   "allowGet": true,
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "returns": {
+    "$ref": "MenuView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getMerchantViewByID": {
+   "id": "myApi.getMerchantViewByID",
+   "allowGet": true,
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "returns": {
+    "$ref": "MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}
