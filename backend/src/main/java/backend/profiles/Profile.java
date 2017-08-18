@@ -2,12 +2,14 @@ package backend.profiles;
 
 import backend.general.Location;
 import backend.general.Review;
+
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +24,18 @@ public abstract class Profile {
     public String name;
     //  public String password; check for 3rd party authentication
     public String email;
-    public List<String> regTokenList = new ArrayList<>();
     public String phone;
+    public String wifiMac;
+    public String deviceMac;
+    public List<String> regTokenList = new ArrayList<>();
     public String imageURl;
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<Key<Review>> reviews = new ArrayList<>();
     public Location currentLocation;
+
     //default constructor for Entity initialization
-    public Profile (){}
+    public Profile() {
+    }
     //============
 
     public void saveProfile() {
@@ -44,7 +50,7 @@ public abstract class Profile {
         this.phone = phone;
     }
 
-    public void removeRegToken(String regToken){
+    public void removeRegToken(String regToken) {
         this.regTokenList.remove(regToken);
         saveProfile();
     }

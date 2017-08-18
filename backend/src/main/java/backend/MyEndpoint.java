@@ -6,22 +6,31 @@
 
 package backend;
 
+import com.google.api.server.spi.Strings;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.CollectionResponse;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.server.spi.config.Named;
 
+import backend.deliveryRequests.DeliveryRequest;
 import backend.general.MerchantView;
 import backend.helpers.CursorHelper;
+import backend.helpers.FireBaseHelper;
 import backend.merchants.Category;
 import backend.merchants.Item;
 import backend.merchants.MenuView;
@@ -50,9 +59,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 )
 public class MyEndpoint {
 
-    /**
-     * A simple endpoint method that takes a name and says Hi back
-     */
+
     /**
      * todo change return types to wrappers after testing
      */
@@ -101,7 +108,7 @@ public class MyEndpoint {
     public Category createCategory(@Named("name") String name,
                                    @Named("description") String description,
                                    @Named("imageURL") String imageURL
-                                   ) {
+    ) {
         Category category = new Category(name, description, imageURL);
         category.saveCategory();
         return category;
@@ -127,11 +134,11 @@ public class MyEndpoint {
     @ApiMethod(name = "createOption", path = "createOption", httpMethod = ApiMethod.HttpMethod.GET)
     public RestaurantItemOption createOption(@Named("name") String name,
                                              @Named("required") boolean required,
-                                             @Named("price") double addedprice,
+                                             @Named("price") double addedPrice,
                                              @Named("description") String description,
-                                             @Named("available") boolean avaliable) {
+                                             @Named("available") boolean available) {
 
-        RestaurantItemOption option = new RestaurantItemOption(name, required, addedprice, description, avaliable);
+        RestaurantItemOption option = new RestaurantItemOption(name, required, addedPrice, description, available);
         option.saveOption();
         return option;
     }
@@ -207,6 +214,78 @@ public class MyEndpoint {
         return Category.getCategoryByID(categoryID).getItems();
     }
 
+
+    @ApiMethod(name = "sendDeliveryRequest")
+    public DeliveryRequest sendDeliveryRequest(@Named("customerId") Long customerId, @Named("merchantId") Long merchantId,
+                                               @Named("orderJsonMap") String orderJsonMap,
+                                               @Named("instructions") String instructions) throws IOException {
+
+        Map<Integer, Long> orderMap = new Gson().fromJson(
+                orderJsonMap, new TypeToken<HashMap<Integer, Long>>() {
+                }.getType()
+        );
+
+        DeliveryRequest deliveryRequest = new DeliveryRequest(customerId, merchantId, orderMap, instructions);
+        deliveryRequest.save();
+        FireBaseHelper.sendNotification(getMerchantByID(merchantId).regTokenList, String.valueOf(deliveryRequest.id));
+        //the merchant client App parses the delivery request id and calls getDeliveryRequestByID
+        return deliveryRequest;
+    }
+
+    @ApiMethod(name = "getDeliveryRequestByID")
+    public DeliveryRequest getDeliveryRequestByID(@Named("deliveryRequestID") Long deliveryRequestID) {
+        return DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
+    }
+
+    @ApiMethod(name = "merchantAcceptsDeliveryRequest")
+    public DeliveryRequest merchantAcceptsDeliveryRequest(@Named("deliveryRequestID") Long deliveryRequestID) {
+        DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
+        deliveryRequest.merchantAcceptsOrder = true;
+        String city = Merchant.getMerchantByID(deliveryRequest.merchantId).
+                location.city;
+        /*
+        * no city field in the driver class yet
+        * this is where you use google maps API
+        * */
+        Query<Driver> driverQuery = ObjectifyService.ofy().load().type(Driver.class).filter("city =", city)
+                .filter("idle =", true);
+
+        List<Driver> driverList = driverQuery.list();
+        List<Long> driverIDs = new ArrayList<>();
+        //getting list of all active drivers' IDs
+        for (Driver driver : driverList) {
+            driverIDs.add(driver.id);
+        }
+        List<Long> driversWhoRefusedIDs = deliveryRequest.driversWhoRefusedIDs;
+        //filtering out drivers who refused
+        for (Long id : driversWhoRefusedIDs) {
+            driverIDs.remove(id);
+        }
+        try {
+            Long driverID = driverIDs.get(0);
+            Driver driver = Driver.getDriverByID(driverID);
+            deliveryRequest.driverId = driverID;
+            deliveryRequest.save();
+            FireBaseHelper.sendNotification(driver.regTokenList, String.valueOf(deliveryRequest.id));
+            return deliveryRequest;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @ApiMethod(name = "driverRefusesDelivery")
+    public DeliveryRequest driverRefusesDelivery(@Named("deliveryRequestID") Long deliveryRequestID,
+                                                 @Named("driverID") Long driverID) {
+        DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
+        deliveryRequest.addDriverWhoRefused(driverID);
+        Driver.getDriverByID(driverID).changeDriverState(true);
+
+        /*
+        * redirect to other driver
+        * don't call a method here to do that, it might stall the driver who refused app
+        * */
+        return deliveryRequest;
+    }
 
     // testing methods
     //===========================================================================

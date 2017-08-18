@@ -49,7 +49,7 @@ public abstract class Merchant {
     public Merchant() {}
 
     public static Merchant getMerchantByID(Long id) {
-        return ofy().load().type(Merchant.class).id(id).now();
+        return Merchant.getMerchantByID(id);
     }
 
     public Merchant(String name, String email, String phone, String imageURL) {
@@ -84,4 +84,5 @@ public abstract class Merchant {
                 filter("name =", name).order("pricing");
         return query.list();
     }
+
 }

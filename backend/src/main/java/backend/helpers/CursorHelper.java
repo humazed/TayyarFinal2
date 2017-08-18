@@ -40,6 +40,7 @@ public class CursorHelper<T> {
         this.cursor = iterator.getCursor();
         return buildCollectionResponse();
     }
+
     public CollectionResponse<T> buildCollectionResponse() {
         CollectionResponse<T> response = CollectionResponse.<T>builder()
                 .setItems(this.result)
