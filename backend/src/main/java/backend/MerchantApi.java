@@ -23,6 +23,7 @@ import java.util.List;
 import com.google.api.server.spi.config.Named;
 
 import backend.deliveryRequests.DeliveryRequest;
+import backend.helpers.Constants;
 import backend.views.MerchantView;
 import backend.helpers.CursorHelper;
 import backend.helpers.FireBaseHelper;
@@ -44,15 +45,13 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * An endpoint class we are exposing
  */
 @Api(
-        name = "myApi",
+        name = "merchantApi",
         version = "v1",
-        namespace = @ApiNamespace(
-                ownerDomain = "backend",
-                ownerName = "backend",
-                packagePath = ""
-        )
+        scopes = {Constants.EMAIL_SCOPE},
+        clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
+        audiences = {Constants.ANDROID_AUDIENCE}
 )
-public class MyEndpoint {
+public class MerchantApi {
 
 
     /**
@@ -77,27 +76,7 @@ public class MyEndpoint {
         return pharmacy;
     }
 
-    @ApiMethod(name = "createCustomer")
-    public Customer createCustomer(@Named("name") String name,
-                                   @Named("email") String email,
-                                   @Named("mainAddress") String mainAddress,
-                                   @Named("phone") String phone) {
-        Customer customer = new Customer(name, email, phone, mainAddress);
-        customer.saveProfile();
-        return customer;
-    }
 
-    @ApiMethod(name = "createDriver")
-    public Driver createDriver(@Named("name") String name,
-                               @Named("email") String email,
-                               @Named("phone") String phone,
-                               @Named("vehicle") String vehicle,
-                               @Named("imageURL") String imageURL
-    ) {
-        Driver driver = new Driver(name, email, phone, vehicle, imageURL);
-        driver.saveProfile();
-        return driver;
-    }
 
     @ApiMethod(name = "createCategory")
     public Category createCategory(@Named("name") String name,
@@ -154,53 +133,15 @@ public class MyEndpoint {
     }
 
 
-    @ApiMethod(name = "addOptionToRestaurantItem")
-    public Item addOptionToRestaurantItem(@Named("itemID") Long itemID,
+    @ApiMethod(name = "addOptionToMerchantItem")
+    public Item addOptionToMerchantItem(@Named("itemID") Long itemID,
                                           @Named("optionID") Long optionID) {
 
-        RestaurantItem item = (RestaurantItem) RestaurantItem.getItemByID(itemID);
-        item.addOptionToThisItem(optionID);
+        Item item =  Item.getItemByID(itemID);
+        item.addOption(optionID);
         return item;
     }
 
-
-    @ApiMethod(name = "getMerchantByName")
-    public List<MerchantView> getMerchantByName(@Named("name") String name) {
-        return MerchantView.
-                getListOfMerchantsViews(Merchant.getMerchantByName(name));
-    }
-
-    @ApiMethod(name = "getMerchantByID")
-    public Merchant getMerchantByID(@Named("merchantID") Long merchantID) {
-        return Merchant.getMerchantByID(merchantID);
-    }
-
-    @ApiMethod(name = "getMerchantViewByID")
-    public MerchantView getMerchantViewByID(@Named("merchantID") Long merchantID) {
-        return new MerchantView(Merchant.getMerchantByID(merchantID));
-    }
-
-    @ApiMethod(name = "getListOfMerchantsViewsOrderedByPricing")
-    public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedByPricing(@Named("cursorStr") @Nullable String cursorStr) {
-
-        Query<Merchant> query = ofy().load().type(Merchant.class).
-                order("pricing").limit(5);
-        CursorHelper<Merchant> cursorHelper = new CursorHelper<>(Merchant.class);
-        CollectionResponse<Merchant> merchantsResponse =
-                cursorHelper.queryAtCursor(query, cursorStr);
-        List<MerchantView> result = MerchantView
-                .getListOfMerchantsViews((List<Merchant>) merchantsResponse.getItems());
-
-        CollectionResponse<MerchantView> response = cursorHelper.buildCollectionResponse(result);
-        return response;
-    }
-
-
-    @ApiMethod(name = "getMerchantMenuByID")
-    public MenuView getMerchantMenuByID(@Named("merchantID") Long merchantID) {
-        MenuView menuView = new MenuView(merchantID);
-        return menuView;
-    }
 
     @ApiMethod(name = "getItemsOfCategory")
     public List<Item> getItemsOfCategory(@Named("categoryID") Long categoryID) {
@@ -208,19 +149,6 @@ public class MyEndpoint {
     }
 
 
-    @ApiMethod(name = "sendDeliveryRequest")
-    public DeliveryRequest sendDeliveryRequest(@Named("deliveryRequestJson")String  deliveryRequestJson ) throws IOException {
-        DeliveryRequest deliveryRequest =  new Gson().fromJson(
-                deliveryRequestJson, new TypeToken<DeliveryRequest>() {
-                }.getType());
-        deliveryRequest.save();
-        FireBaseHelper.sendNotification(Merchant.getMerchantByID(
-                deliveryRequest.merchantId).regTokenList,
-                String.valueOf(deliveryRequest.id));
-
-        //the merchant client App parses the delivery request id and calls getDeliveryRequestByID
-        return deliveryRequest;
-    }
 
     @ApiMethod(name = "getDeliveryRequestByID")
     public DeliveryRequest getDeliveryRequestByID(@Named("deliveryRequestID") Long deliveryRequestID) {
@@ -264,19 +192,6 @@ public class MyEndpoint {
         }
     }
 
-    @ApiMethod(name = "driverRefusesDelivery")
-    public DeliveryRequest driverRefusesDelivery(@Named("deliveryRequestID") Long deliveryRequestID,
-                                                 @Named("driverID") Long driverID) {
-        DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
-        deliveryRequest.addDriverWhoRefused(driverID);
-        Driver.getDriverByID(driverID).changeDriverState(true);
-
-        /*
-        * redirect to other driver
-        * don't call a method here to do that, it might stall the driver who refused app
-        * */
-        return deliveryRequest;
-    }
 
     // testing methods
     //===========================================================================

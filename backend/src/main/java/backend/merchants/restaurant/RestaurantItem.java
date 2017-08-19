@@ -26,9 +26,4 @@ public class RestaurantItem extends Item {
         super(name, basePrice);
     }
 
-    public void addOptionToThisItem(Long optionID){
-        Key<Option> optionKey = Key.create(Option.class,optionID);
-        this.options.add(optionKey);
-        ObjectifyService.ofy().save().entity(this).now();// save changes in this category
-    }
 }
