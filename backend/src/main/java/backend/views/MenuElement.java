@@ -1,4 +1,4 @@
-package backend.merchants;
+package backend.views;
 
 /**
  * Created by Muhammad Saeed on 4/5/2017.

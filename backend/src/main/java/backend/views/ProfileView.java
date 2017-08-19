@@ -1,6 +1,7 @@
-package backend.profiles;
+package backend.views;
 
 import backend.general.Location;
+import backend.profiles.Profile;
 
 /**
  * Created by Muhammad on 25/07/2017.

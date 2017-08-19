@@ -1,6 +1,7 @@
 package backend.merchants.restaurant;
 
 import backend.merchants.Item;
+import backend.merchants.Option;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
@@ -16,9 +17,7 @@ import java.util.List;
  */
 @Subclass(index = true)
 public class RestaurantItem extends Item {
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Key<RestaurantItemOption>> options = new ArrayList<>();
-    //default constructor for Entity initialization
+        //default constructor for Entity initialization
 
     public RestaurantItem() {
     }
@@ -28,7 +27,7 @@ public class RestaurantItem extends Item {
     }
 
     public void addOptionToThisItem(Long optionID){
-        Key<RestaurantItemOption> optionKey = Key.create(RestaurantItemOption.class,optionID);
+        Key<Option> optionKey = Key.create(Option.class,optionID);
         this.options.add(optionKey);
         ObjectifyService.ofy().save().entity(this).now();// save changes in this category
     }

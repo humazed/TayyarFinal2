@@ -5,12 +5,8 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.cmd.Query;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
-
-import backend.general.MerchantView;
-import backend.merchants.Merchant;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 

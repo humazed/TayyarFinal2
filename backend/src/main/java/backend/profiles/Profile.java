@@ -1,6 +1,7 @@
 package backend.profiles;
 
 import backend.general.Location;
+import backend.general.Notifiable;
 import backend.general.Review;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by Muhammad on 25/07/2017.
  */
 @Entity
-public abstract class Profile {
+public abstract class Profile implements Notifiable{
     @Id
     public Long id;
     public String name;
@@ -27,7 +28,6 @@ public abstract class Profile {
     public String phone;
     public String wifiMac;
     public String deviceMac;
-    public List<String> regTokenList = new ArrayList<>();
     public String imageURl;
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<Key<Review>> reviews = new ArrayList<>();
@@ -50,9 +50,15 @@ public abstract class Profile {
         this.phone = phone;
     }
 
-    public void removeRegToken(String regToken) {
-        this.regTokenList.remove(regToken);
+    @Override
+    public void addRegToken(String regToken) {
+        this.regTokenList.add(regToken);
         saveProfile();
     }
 
+    @Override
+    public void removeRegToken(String regToken) {
+        this.regTokenList.add(regToken);
+        saveProfile();
+    }
 }

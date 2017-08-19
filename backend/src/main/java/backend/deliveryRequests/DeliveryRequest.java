@@ -1,18 +1,13 @@
 package backend.deliveryRequests;
 
-import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.Named;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import backend.helpers.OfyHelper;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -26,21 +21,25 @@ public class DeliveryRequest {
     public Long customerId;
     public Long driverId;
     public Long merchantId;
+    //time info;
     //location info
     public boolean merchantAcceptsOrder = false;
     public boolean driverAcceptsOrder = false;
     public boolean driverConfirmedPickUP = false;
     public boolean orderDelivered = false;
+    List<OrderItem> orderItems = new ArrayList<>();
     public List<Long> driversWhoRefusedIDs = new ArrayList<>();
-    public Map<Integer, Long> order = new HashMap<>();
-    public String instructions;
+    public String generalInstructions;
 
     public DeliveryRequest(Long customerId, Long merchantId,
-                           Map<Integer, Long> order, String instructions) {
+                           List<OrderItem> orderItems,String generalInstructions) {
         this.customerId = customerId;
         this.merchantId = merchantId;
-        this.order = order;
-        this.instructions = instructions;
+        this.orderItems = orderItems;
+        this.generalInstructions = generalInstructions;
+    }
+
+    public DeliveryRequest() {
     }
 
     public void save() {

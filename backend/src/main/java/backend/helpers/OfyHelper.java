@@ -1,6 +1,5 @@
 package backend.helpers;
 
-import backend.MyEndpoint;
 import backend.deliveryRequests.DeliveryRequest;
 import backend.general.Review;
 import backend.merchants.Category;
@@ -8,9 +7,9 @@ import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
+import backend.merchants.Option;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.restaurant.RestaurantItem;
-import backend.merchants.restaurant.RestaurantItemOption;
 import backend.profiles.Profile;
 import backend.profiles.customer.Customer;
 import backend.profiles.driver.Driver;
@@ -37,7 +36,7 @@ public class OfyHelper implements ServletContextListener {
         ObjectifyService.register(PharmacyItem.class);
         ObjectifyService.register(Review.class);
         ObjectifyService.register(RestaurantItem.class);
-        ObjectifyService.register(RestaurantItemOption.class);
+        ObjectifyService.register(Option.class);
         ObjectifyService.register(Profile.class);
         ObjectifyService.register(Customer.class);
         ObjectifyService.register(Driver.class);

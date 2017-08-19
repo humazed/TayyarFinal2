@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import backend.general.Location;
+import backend.general.Notifiable;
 import backend.general.Review;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -21,7 +22,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 24/07/2017.
  */
 @Entity
-public abstract class Merchant {
+public abstract class Merchant implements Notifiable {
     @Id
     public Long id;
     @Index
@@ -36,7 +37,6 @@ public abstract class Merchant {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<Key<Category>> categories = new ArrayList<Key<Category>>();
     public String imageURL;
-    public List<String> regTokenList = new ArrayList<>();
     @Index
     public int pricing;
     @Index
@@ -45,7 +45,7 @@ public abstract class Merchant {
     public boolean active;
 
 
-    //default constructor for Entity initalization
+    //default constructor for Entity initialization
     public Merchant() {}
 
     public static Merchant getMerchantByID(Long id) {
@@ -85,4 +85,15 @@ public abstract class Merchant {
         return query.list();
     }
 
+    @Override
+    public void addRegToken(String regToken) {
+        this.regTokenList.add(regToken);
+        saveMerchant();
+    }
+
+    @Override
+    public void removeRegToken(String regToken) {
+        this.regTokenList.remove(regToken);
+        saveMerchant();
+    }
 }

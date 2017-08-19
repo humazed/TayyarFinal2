@@ -6,7 +6,6 @@
 
 package backend;
 
-import com.google.api.server.spi.Strings;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -14,30 +13,26 @@ import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.api.server.spi.config.Named;
 
 import backend.deliveryRequests.DeliveryRequest;
-import backend.general.MerchantView;
+import backend.views.MerchantView;
 import backend.helpers.CursorHelper;
 import backend.helpers.FireBaseHelper;
 import backend.merchants.Category;
 import backend.merchants.Item;
-import backend.merchants.MenuView;
+import backend.views.MenuView;
 import backend.merchants.Merchant;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
-import backend.merchants.restaurant.RestaurantItemOption;
+import backend.merchants.Option;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.restaurant.RestaurantItem;
 import backend.profiles.customer.Customer;
@@ -132,13 +127,11 @@ public class MyEndpoint {
 
 
     @ApiMethod(name = "createOption", path = "createOption", httpMethod = ApiMethod.HttpMethod.GET)
-    public RestaurantItemOption createOption(@Named("name") String name,
-                                             @Named("required") boolean required,
-                                             @Named("price") double addedPrice,
-                                             @Named("description") String description,
-                                             @Named("available") boolean available) {
+    public Option createOption(@Named("name") String name,
+                               @Named("required") boolean required,
+                               @Named("description") String description) {
 
-        RestaurantItemOption option = new RestaurantItemOption(name, required, addedPrice, description, available);
+        Option option = new Option(name, required, description);
         option.saveOption();
         return option;
     }
@@ -187,8 +180,8 @@ public class MyEndpoint {
         return new MerchantView(Merchant.getMerchantByID(merchantID));
     }
 
-    @ApiMethod(name = "getListOfMerchantsViews")
-    public CollectionResponse<MerchantView> getMerchantsViewsOrderedByPricing(@Named("cursorStr") @Nullable String cursorStr) {
+    @ApiMethod(name = "getListOfMerchantsViewsOrderedByPricing")
+    public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedByPricing(@Named("cursorStr") @Nullable String cursorStr) {
 
         Query<Merchant> query = ofy().load().type(Merchant.class).
                 order("pricing").limit(5);
@@ -216,18 +209,15 @@ public class MyEndpoint {
 
 
     @ApiMethod(name = "sendDeliveryRequest")
-    public DeliveryRequest sendDeliveryRequest(@Named("customerId") Long customerId, @Named("merchantId") Long merchantId,
-                                               @Named("orderJsonMap") String orderJsonMap,
-                                               @Named("instructions") String instructions) throws IOException {
-
-        Map<Integer, Long> orderMap = new Gson().fromJson(
-                orderJsonMap, new TypeToken<HashMap<Integer, Long>>() {
-                }.getType()
-        );
-
-        DeliveryRequest deliveryRequest = new DeliveryRequest(customerId, merchantId, orderMap, instructions);
+    public DeliveryRequest sendDeliveryRequest(@Named("deliveryRequestJson")String  deliveryRequestJson ) throws IOException {
+        DeliveryRequest deliveryRequest =  new Gson().fromJson(
+                deliveryRequestJson, new TypeToken<DeliveryRequest>() {
+                }.getType());
         deliveryRequest.save();
-        FireBaseHelper.sendNotification(getMerchantByID(merchantId).regTokenList, String.valueOf(deliveryRequest.id));
+        FireBaseHelper.sendNotification(Merchant.getMerchantByID(
+                deliveryRequest.merchantId).regTokenList,
+                String.valueOf(deliveryRequest.id));
+
         //the merchant client App parses the delivery request id and calls getDeliveryRequestByID
         return deliveryRequest;
     }
@@ -236,6 +226,7 @@ public class MyEndpoint {
     public DeliveryRequest getDeliveryRequestByID(@Named("deliveryRequestID") Long deliveryRequestID) {
         return DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
     }
+
 
     @ApiMethod(name = "merchantAcceptsDeliveryRequest")
     public DeliveryRequest merchantAcceptsDeliveryRequest(@Named("deliveryRequestID") Long deliveryRequestID) {

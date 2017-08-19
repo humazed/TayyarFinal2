@@ -1,4 +1,4 @@
-package backend.general;
+package backend.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ public class MerchantView {
         for (Merchant merchant : list) {
             merchantViews.add(new MerchantView(merchant));
         }
+
         return merchantViews;
     }
 }
