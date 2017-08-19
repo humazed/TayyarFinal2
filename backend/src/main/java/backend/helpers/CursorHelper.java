@@ -24,7 +24,6 @@ public class CursorHelper<T> {
     }
 
     public CollectionResponse<T> queryAtCursor(Query<T> query, String cursorStr) {
-        query = ofy().load().type(this.classType).limit(5);
         if (cursorStr != null) {
             query = query.startAt(Cursor.fromWebSafeString(cursorStr));
         }

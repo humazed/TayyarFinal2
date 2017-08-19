@@ -1,13 +1,14 @@
 package backend.views;
 
 import backend.general.Location;
+import backend.general.Viewable;
 import backend.profiles.Profile;
 
 /**
  * Created by Muhammad on 25/07/2017.
  */
 
-public class ProfileView {
+public class ProfileView implements Viewable {
     public Long id;
     public String name;
     public String email;

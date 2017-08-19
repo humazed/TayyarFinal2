@@ -1,4 +1,4 @@
-package backend;
+package backend.apis;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -11,7 +11,7 @@ import backend.profiles.driver.Driver;
 /**
  * Created by Muhammad on 19/08/2017.
  */
-@Api(name = "orderAPI",
+@Api(name = "driverApi",
         version = "v1",
         scopes = {Constants.EMAIL_SCOPE},
         clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},

@@ -3,13 +3,14 @@ package backend.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import backend.general.Viewable;
 import backend.merchants.Category;
 import backend.merchants.Merchant;
 /**
  * Created by Muhammad Saeed on 3/24/2017.
  */
 
-public class MenuView {
+public class MenuView implements Viewable{
     public List<MenuElement> menuElements = new ArrayList<>();
 
     //internal uses

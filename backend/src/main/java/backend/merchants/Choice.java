@@ -13,8 +13,10 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class Choice {
     @Id
     Long id;
+    public String name;
     public double addedPrice;
-    public boolean available;
+    public String description;
+    public boolean available = true;
     /* final price = basePrice+addedPrice
 
        ex: Kushari
@@ -35,6 +37,13 @@ public class Choice {
     public Choice() {
     }
     //============
+
+
+    public Choice(String name, double addedPrice, String description) {
+        this.name = name;
+        this.addedPrice = addedPrice;
+        this.description = description;
+    }
 
     public static Choice getChoiceByID(Long id) {
         return ofy().load().type(Choice.class).id(id).now();

@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface Notifiable {
     public List<String> regTokenList = new ArrayList<>();
-
     public void addRegToken(String regToken);
     public void removeRegToken(String regToken);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import backend.general.Location;
 import backend.general.Notifiable;
 import backend.general.Review;
+import backend.general.Viewable;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -22,7 +23,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 24/07/2017.
  */
 @Entity
-public abstract class Merchant implements Notifiable {
+public abstract class Merchant implements Notifiable, Viewable {
     @Id
     public Long id;
     @Index

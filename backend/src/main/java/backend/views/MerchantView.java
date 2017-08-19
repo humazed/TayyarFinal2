@@ -1,14 +1,16 @@
 package backend.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import backend.general.Viewable;
 import backend.merchants.Merchant;
 
 /**
  * Created by Muhammad Saeed on 3/10/2017.
  */
-public class MerchantView {
+public class MerchantView implements Viewable{
     public String name;
     public Long merchantID;
     public String imageURL;
@@ -29,8 +31,9 @@ public class MerchantView {
         this.active = merchant.active;
         this.pricing = merchant.pricing;
         this.rating = merchant.rating;
+        //delivery estimate
     }
-    public static List<MerchantView> getListOfMerchantsViews(List<Merchant> list){
+    public static List<MerchantView> getListOfMerchantsViews(List<? extends Merchant> list){
         List<MerchantView> merchantViews = new ArrayList<>();
         for (Merchant merchant : list) {
             merchantViews.add(new MerchantView(merchant));

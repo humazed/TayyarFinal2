@@ -4,7 +4,7 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloEndpoints
 */
 
-package backend;
+package backend.apis;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -24,6 +24,8 @@ import com.google.api.server.spi.config.Named;
 
 import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
+import backend.merchants.Choice;
+import backend.merchants.superMarket.SuperMarket;
 import backend.views.MerchantView;
 import backend.helpers.CursorHelper;
 import backend.helpers.FireBaseHelper;
@@ -77,7 +79,6 @@ public class MerchantApi {
     }
 
 
-
     @ApiMethod(name = "createCategory")
     public Category createCategory(@Named("name") String name,
                                    @Named("description") String description,
@@ -105,7 +106,7 @@ public class MerchantApi {
     }
 
 
-    @ApiMethod(name = "createOption", path = "createOption", httpMethod = ApiMethod.HttpMethod.GET)
+    @ApiMethod(name = "createOption")
     public Option createOption(@Named("name") String name,
                                @Named("required") boolean required,
                                @Named("description") String description) {
@@ -113,6 +114,16 @@ public class MerchantApi {
         Option option = new Option(name, required, description);
         option.saveOption();
         return option;
+    }
+
+    @ApiMethod(name = "createChoice")
+    public Choice createChoice(@Named("name") String name,
+                               @Named("addedPrice") double addedPrice,
+                               @Named("description") String description) {
+
+        Choice choice = new Choice(name, addedPrice, description);
+        choice.saveChoice();
+        return choice;
     }
 
 
@@ -133,21 +144,30 @@ public class MerchantApi {
     }
 
 
-    @ApiMethod(name = "addOptionToMerchantItem")
-    public Item addOptionToMerchantItem(@Named("itemID") Long itemID,
-                                          @Named("optionID") Long optionID) {
+    @ApiMethod(name = "addOptionToItem")
+    public Item addOptionTotItem(@Named("itemID") Long itemID,
+                                 @Named("optionID") Long optionID) {
 
-        Item item =  Item.getItemByID(itemID);
+        Item item = Item.getItemByID(itemID);
         item.addOption(optionID);
         return item;
     }
 
 
-    @ApiMethod(name = "getItemsOfCategory")
-    public List<Item> getItemsOfCategory(@Named("categoryID") Long categoryID) {
-        return Category.getCategoryByID(categoryID).getItems();
+    @ApiMethod(name = "addChoiceToOption")
+    public Option addChoiceToOption(@Named("optionID") Long optionID,
+                                    @Named("choiceID") Long choiceID) {
+
+        Option option = Option.getOptionByID(optionID);
+        option.addChoice(choiceID);
+        return option;
     }
 
+
+    @ApiMethod(name = "getItemsOfCategoryByID")
+    public List<Item> getItemsOfCategoryByID(@Named("categoryID") Long categoryID) {
+        return Category.getCategoryByID(categoryID).getItems();
+    }
 
 
     @ApiMethod(name = "getDeliveryRequestByID")
@@ -199,11 +219,17 @@ public class MerchantApi {
     public List<Merchant> create20Merchants() {
         List<Merchant> merchantList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            Restaurant merchant = new Restaurant();
-            Pharmacy pharmacy = new Pharmacy();
-            merchantList.add(merchant);
+            Restaurant restaurant = new Restaurant(i + " Restaurant " + i, "@", "010", "151aaa");
+            Pharmacy pharmacy = new Pharmacy(i + " Pharmacy " + i, "@", "010", "151aaa");
+            SuperMarket superMarket = new SuperMarket(i + " SuperMarket " + i, "@", "010", "151aaa");
+            restaurant.pricing =(int) (Math.random()*10);
+            pharmacy.pricing =  (int) (Math.random()*10);
+            superMarket.pricing =(int) (Math.random()*10);
+            restaurant.saveMerchant();
+            pharmacy.saveMerchant();
+            superMarket.saveMerchant();
+            merchantList.add(restaurant);
             merchantList.add(pharmacy);
-            merchant.saveMerchant();
         }
         return merchantList;
     }
