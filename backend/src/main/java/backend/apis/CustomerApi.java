@@ -124,5 +124,12 @@ public class CustomerApi {
         return deliveryRequest;
     }
 
-
+ //testing methods
+ @ApiMethod(name = "getListOfRestaurantsViewsOrderedBy",path = "getListOfRestaurantsViewsOrderedBy")
+ public CollectionResponse<MerchantView> getListOfRestaurantsViewsOrderedBy(
+         @Named("cursorStr") @Nullable String cursorStr,
+         @Named("merchantsOrderBy") MerchantsOrderBy merchantsOrderBy,
+         @Named("limitNumber") int limitNumber){
+     return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantType.RESTAURANT,limitNumber);
+ }
 }

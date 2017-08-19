@@ -223,7 +223,7 @@ public class MerchantApi {
     @ApiMethod(name = "createRandomMerchants")
     public List<Merchant> createRandomMerchants()  {
         List<Merchant> merchantList = new ArrayList<>();
-        for (int i = 0; i <10 ; i++) {
+        for (int i = 0; i <2 ; i++) {
             Restaurant restaurant = new Restaurant(i + " Restaurant " + i, "@", "010", "151aaa");
             Pharmacy pharmacy = new Pharmacy(i + " Pharmacy " + i, "@", "010", "151aaa");
             SuperMarket superMarket = new SuperMarket(i + " SuperMarket "+ i, "@", "010", "151aaa");
