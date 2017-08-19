@@ -31,7 +31,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 19/08/2017.
  */
 @Api(
-        name = "customerApiInstance",
+        name = "customerApi",
         version = "v1",
         scopes = {Constants.EMAIL_SCOPE},
         clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},

@@ -97,4 +97,5 @@ public abstract class Merchant implements Notifiable, Viewable {
         this.regTokenList.remove(regToken);
         saveMerchant();
     }
+
 }

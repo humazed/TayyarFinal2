@@ -12,7 +12,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 @Entity
 public class Choice {
     @Id
-    Long id;
+    public Long id;
     public String name;
     public double addedPrice;
     public String description;
