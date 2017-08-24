@@ -1,5 +1,6 @@
 package backend.general;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -15,6 +16,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 16/08/2017.
  */
 @Entity
+@Cache
 public class BlackListedProfile {
     @Id
     Long id;

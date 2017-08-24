@@ -2,12 +2,14 @@ package backend.profiles.customer;
 
 import backend.profiles.Profile;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Subclass;
 
 /**
  * Created by Muhammad Saeed on 2/9/2017.
  */
 @Subclass(index = true)
+@Cache
 public class Customer extends Profile {
     public String mainAddress;
     public int numberOfOrders =0;

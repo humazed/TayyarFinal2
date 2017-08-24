@@ -1,7 +1,6 @@
-package backend.views;
+package backend.merchants.pharmacy;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import backend.general.Viewable;

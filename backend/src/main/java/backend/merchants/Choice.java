@@ -1,6 +1,7 @@
 package backend.merchants;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -10,6 +11,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 19/08/2017.
  */
 @Entity
+@Cache
+
 public class Choice {
     @Id
     public Long id;
@@ -17,6 +20,7 @@ public class Choice {
     public double addedPrice;
     public String description;
     public boolean available = true;
+    
     /* final price = basePrice+addedPrice
 
        ex: Kushari

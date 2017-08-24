@@ -8,45 +8,24 @@ package backend.apis;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.ApiNamespace;
-import com.google.api.server.spi.config.Nullable;
-import com.google.api.server.spi.response.CollectionResponse;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.cmd.Query;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 import com.google.api.server.spi.config.Named;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+
+import java.util.List;
 
 import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
-import backend.merchants.Choice;
-import backend.merchants.superMarket.SuperMarket;
-import backend.merchants.superMarket.SuperMarketItem;
-import backend.views.MerchantView;
-import backend.helpers.CursorHelper;
-import backend.helpers.FireBaseHelper;
 import backend.merchants.Category;
+import backend.merchants.Choice;
 import backend.merchants.Item;
-import backend.views.MenuView;
 import backend.merchants.Merchant;
+import backend.merchants.Option;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
-import backend.merchants.Option;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.restaurant.RestaurantItem;
-import backend.profiles.customer.Customer;
-import backend.profiles.driver.Driver;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * An endpoint class we are exposing
@@ -64,6 +43,12 @@ public class MerchantApi {
     /**
      * todo change return types to wrappers after testing
      */
+
+    @ApiMethod(name = "getMerchantById")
+    public Merchant getMerchantById(@Named("merchantId") Long merchantId){
+        return Merchant.getMerchantByID(merchantId);
+    }
+
 
     @ApiMethod(name = "createRestaurant")
     public Restaurant createRestaurant(@Named("name") String name, @Named("email") String email,
@@ -184,37 +169,10 @@ public class MerchantApi {
     @ApiMethod(name = "merchantAcceptsDeliveryRequest")
     public DeliveryRequest merchantAcceptsDeliveryRequest(@Named("deliveryRequestID") Long deliveryRequestID) {
         DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
-        deliveryRequest.merchantAcceptsOrder = true;
-        String city = Merchant.getMerchantByID(deliveryRequest.merchantId).
-                location.city;
-        /*
-        * no city field in the driver class yet
-        * this is where you use google maps API
-        * */
-        Query<Driver> driverQuery = ObjectifyService.ofy().load().type(Driver.class).filter("city =", city)
-                .filter("idle =", true);
-
-        List<Driver> driverList = driverQuery.list();
-        List<Long> driverIDs = new ArrayList<>();
-        //getting list of all active drivers' IDs
-        for (Driver driver : driverList) {
-            driverIDs.add(driver.id);
-        }
-        List<Long> driversWhoRefusedIDs = deliveryRequest.driversWhoRefusedIDs;
-        //filtering out drivers who refused
-        for (Long id : driversWhoRefusedIDs) {
-            driverIDs.remove(id);
-        }
-        try {
-            Long driverID = driverIDs.get(0);
-            Driver driver = Driver.getDriverByID(driverID);
-            deliveryRequest.driverId = driverID;
-            deliveryRequest.save();
-            FireBaseHelper.sendNotification(driver.regTokenList, String.valueOf(deliveryRequest.id));
-            return deliveryRequest;
-        } catch (Exception e) {
-            return null;
-        }
+        final Queue queue = QueueFactory.getQueue("driverQueue");
+        queue.add(TaskOptions.Builder.withUrl("//GetTheNearestDriverServlet").
+                param("deliveryRequestId",deliveryRequest.toString()));
+        return deliveryRequest;
     }
 
 
@@ -222,55 +180,8 @@ public class MerchantApi {
     //===========================================================================
     @ApiMethod(name = "createRandomMerchants")
     public List<Merchant> createRandomMerchants()  {
-        List<Merchant> merchantList = new ArrayList<>();
-        for (int i = 0; i <2 ; i++) {
-            Restaurant restaurant = new Restaurant(i + " Restaurant " + i, "@", "010", "151aaa");
-            Pharmacy pharmacy = new Pharmacy(i + " Pharmacy " + i, "@", "010", "151aaa");
-            SuperMarket superMarket = new SuperMarket(i + " SuperMarket "+ i, "@", "010", "151aaa");
-            restaurant.saveMerchant();
-            pharmacy.saveMerchant();
-            superMarket.saveMerchant();
-            merchantList.add(restaurant);
-            merchantList.add(pharmacy);
-            merchantList.add(superMarket);
-        }
-        for (Merchant merchant : merchantList) {
-            merchant.pricing = (int) (Math.random() * 10);
-            merchant.addRegToken("regToken Holder");
-            for (int j = 0; j < 4; j++) {
-                Category category = new Category(j+" "+String.valueOf((char) ((int) 'a' + j)), "bla", "imageURL");
-                category.saveCategory();
-                merchant.addCategory(category.id);
-                for (int k = 0; k < 6; k++) {
-                    Item item;
-                    if (merchant instanceof Restaurant) {
-                        item = new RestaurantItem(k+" "+String.valueOf((char) ((int) 'a' + j))+" Restaurant", Math.random() * 200);
-                    }
-                    else if (merchant instanceof SuperMarket){
-                        item = new SuperMarketItem(k+" "+String.valueOf((char) ((int) 'a' + j))+" SuperMarket", Math.random() * 200);
-                    }
-                    else {
-                        item = new PharmacyItem(k+" "+String.valueOf((char) ((int) 'a' + j))+" Pharmacy", Math.random() * 200);
-                    }
-                    item.saveItem();
-                    for (int l = 0; l <2 ; l++) {
-                        Option option = new Option(item.name+" "+l+" "+String.valueOf((char) ((int) 'a' + j))+" option",false,"bla bla bla");
-                        option.saveOption();
-                        item.addOption(option.id);
-                        for (int m = 0; m < 2; m++) {
-                            Choice choice = new Choice(l+" "+String.valueOf((char) ((int) 'a' + j))+" Choice",Math.random()*50,"bla bla");
-                            choice.saveChoice();
-                            option.addChoice(choice.id);
-                        }
-                        option.saveOption();
-                    }
-                    item.saveItem();
-                    category.addItem(item.id);
-                }
-                category.saveCategory();
-                merchant.saveMerchant();
-            }
-        }
-        return merchantList;
+        final Queue queue = QueueFactory.getQueue("createMerchantsQueue");
+        queue.add(TaskOptions.Builder.withUrl("/GenerateTestDataServlet"));
+        return null;
     }
 }

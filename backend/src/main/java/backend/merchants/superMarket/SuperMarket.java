@@ -1,5 +1,6 @@
 package backend.merchants.superMarket;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Subclass;
 
 import backend.merchants.Merchant;
@@ -8,6 +9,7 @@ import backend.merchants.Merchant;
  * Created by Muhammad on 19/08/2017.
  */
 @Subclass(index = true)
+@Cache
 public class SuperMarket extends Merchant {
 
     //default constructor for Entity initialization

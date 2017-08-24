@@ -3,6 +3,7 @@ package backend.profiles;
 import backend.general.Location;
 import backend.general.Notifiable;
 import backend.general.Review;
+import backend.merchants.Merchant;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
@@ -14,6 +15,8 @@ import com.googlecode.objectify.annotation.Index;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Created by Muhammad on 25/07/2017.
@@ -39,9 +42,13 @@ public abstract class Profile implements Notifiable{
     //============
 
     public void saveProfile() {
-        ObjectifyService.ofy().save().entity(this).now();
+        ofy().save().entity(this).now();
     }
     //to be used with signUp, updating profile info etc
+
+    public static Profile getProfileByID(Long id) {
+        return ofy().load().type(Profile.class).id(id).now();
+    }
 
 
     public Profile(String name, String email, String phone) {
@@ -60,5 +67,10 @@ public abstract class Profile implements Notifiable{
     public void removeRegToken(String regToken) {
         this.regTokenList.add(regToken);
         saveProfile();
+    }
+
+    @Override
+    public List<String> getRegTokenList() {
+        return this.regTokenList;
     }
 }

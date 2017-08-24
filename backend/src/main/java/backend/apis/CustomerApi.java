@@ -23,7 +23,7 @@ import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.profiles.customer.Customer;
 import backend.views.MenuView;
-import backend.views.MerchantView;
+import backend.merchants.pharmacy.MerchantView;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -61,6 +61,7 @@ public class CustomerApi {
         return customer;
     }
 
+
     @ApiMethod(name = "getMerchantByName")
     public List<MerchantView> getMerchantByName(@Named("name") String name) {
         return MerchantView.
@@ -80,10 +81,11 @@ public class CustomerApi {
     @ApiMethod(name = "getListOfMerchantsViewsOrderedBy")
     public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedBy(
             @Named("cursorStr") @Nullable String cursorStr,
-            @Named("merchantsOrderBy") MerchantsOrderBy merchantsOrderBy,
-            @Named("merchantType") MerchantType merchantType,
+            @Named("merchantsOrderByJson") String  merchantsOrderByJson,
+            @Named("merchantTypeJson") String  merchantTypeJson,
             @Named("limitNumber") int limitNumber) {
-
+        MerchantType merchantType = new Gson().fromJson(merchantTypeJson,new TypeToken<MerchantType>(){}.getType());
+        MerchantsOrderBy merchantsOrderBy =  new Gson().fromJson(merchantsOrderByJson,new TypeToken<MerchantsOrderBy>(){}.getType());
         Class<? extends Merchant> aClass = merchantType.getMarked();
         Query<Merchant> query = (Query<Merchant>) ofy().load().type(aClass).
                 order(merchantsOrderBy.getMarked()).limit(limitNumber);
@@ -117,7 +119,7 @@ public class CustomerApi {
                 }.getType());
         deliveryRequest.save();
         FireBaseHelper.sendNotification(Merchant.getMerchantByID(
-                deliveryRequest.merchantId).regTokenList,
+                deliveryRequest.merchantId).getRegTokenList(),
                 String.valueOf(deliveryRequest.id));
 
         //the merchant client App parses the delivery request id and calls getDeliveryRequestByID
@@ -125,11 +127,11 @@ public class CustomerApi {
     }
 
  //testing methods
- @ApiMethod(name = "getListOfRestaurantsViewsOrderedBy",path = "getListOfRestaurantsViewsOrderedBy")
+ /*@ApiMethod(name = "getListOfRestaurantsViewsOrderedBy",path = "getListOfRestaurantsViewsOrderedBy")
  public CollectionResponse<MerchantView> getListOfRestaurantsViewsOrderedBy(
          @Named("cursorStr") @Nullable String cursorStr,
          @Named("merchantsOrderBy") MerchantsOrderBy merchantsOrderBy,
          @Named("limitNumber") int limitNumber){
      return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantType.RESTAURANT,limitNumber);
- }
+ }*/
 }

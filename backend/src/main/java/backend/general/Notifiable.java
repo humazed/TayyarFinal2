@@ -8,7 +8,11 @@ import java.util.List;
  */
 
 public interface Notifiable {
-    public List<String> regTokenList = new ArrayList<>();
-    public void addRegToken(String regToken);
-    public void removeRegToken(String regToken);
+    List<String> regTokenList = new ArrayList<>();
+
+    void addRegToken(String regToken);
+
+    void removeRegToken(String regToken);
+
+    List<String> getRegTokenList();
 }

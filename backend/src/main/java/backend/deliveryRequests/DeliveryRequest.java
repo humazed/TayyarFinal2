@@ -27,6 +27,10 @@ public class DeliveryRequest {
     public boolean driverAcceptsOrder = false;
     public boolean driverConfirmedPickUP = false;
     public boolean orderDelivered = false;
+    public double charge;
+    public double tip;
+    public double distanceDriverDrived;
+    public double timeDriverSpent;
     List<OrderItem> orderItems = new ArrayList<>();
     public List<Long> driversWhoRefusedIDs = new ArrayList<>();
     public String generalInstructions;

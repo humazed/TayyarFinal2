@@ -23,6 +23,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 24/07/2017.
  */
 @Entity
+@Cache
 public abstract class Merchant implements Notifiable, Viewable {
     @Id
     public Long id;
@@ -50,7 +51,7 @@ public abstract class Merchant implements Notifiable, Viewable {
     public Merchant() {}
 
     public static Merchant getMerchantByID(Long id) {
-        return Merchant.getMerchantByID(id);
+        return ofy().load().type(Merchant.class).id(id).now();
     }
 
     public Merchant(String name, String email, String phone, String imageURL) {
@@ -67,7 +68,7 @@ public abstract class Merchant implements Notifiable, Viewable {
     public void addCategory(Long categoryID) {
         Key<Category> categoryKey = Key.create(Category.class, categoryID);
         this.categories.add(categoryKey);
-        ofy().save().entity(this).now();// save changes in this Merchant
+        saveMerchant();// save changes in this Merchant
     }
 
     public List<Category> getCategories() {
@@ -98,4 +99,8 @@ public abstract class Merchant implements Notifiable, Viewable {
         saveMerchant();
     }
 
+    @Override
+    public List<String> getRegTokenList() {
+        return this.regTokenList;
+    }
 }

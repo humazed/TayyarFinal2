@@ -3,6 +3,7 @@ package backend.merchants;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -16,6 +17,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by Muhammad on 24/07/2017.
  */
 @Entity
+@Cache
+
 public abstract class Item {
     @Id
     public Long id;
