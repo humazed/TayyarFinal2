@@ -16,8 +16,8 @@ import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
 import backend.helpers.CursorHelper;
 import backend.helpers.FireBaseHelper;
-import backend.helpers.enums.MerchantType;
-import backend.helpers.enums.MerchantsOrderBy;
+import backend.helpers.pseudoEnums.MerchantOrderByOptions;
+import backend.helpers.pseudoEnums.MerchantTypes;
 import backend.merchants.Category;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
@@ -81,16 +81,16 @@ public class CustomerApi {
     @ApiMethod(name = "getListOfMerchantsViewsOrderedBy")
     public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedBy(
             @Named("cursorStr") @Nullable String cursorStr,
-            @Named("merchantsOrderByJson") String  merchantsOrderByJson,
-            @Named("merchantTypeJson") String  merchantTypeJson,
+            @Named("orderByOption") String  orderByOption,
+            @Named("merchantType") String  merchantType,
             @Named("limitNumber") int limitNumber) {
-        MerchantType merchantType = new Gson().fromJson(merchantTypeJson,new TypeToken<MerchantType>(){}.getType());
-        MerchantsOrderBy merchantsOrderBy =  new Gson().fromJson(merchantsOrderByJson,new TypeToken<MerchantsOrderBy>(){}.getType());
-        Class<? extends Merchant> aClass = merchantType.getMarked();
-        Query<Merchant> query = (Query<Merchant>) ofy().load().type(aClass).
-                order(merchantsOrderBy.getMarked()).limit(limitNumber);
 
-        CursorHelper<Merchant> cursorHelper = (CursorHelper<Merchant>) new CursorHelper<>(aClass);
+        Class<? extends Merchant> merchantTypeClass = MerchantTypes.getMerchantTypeClass(merchantType);
+
+        Query<Merchant> query = (Query<Merchant>) ofy().load().type(merchantTypeClass).
+                order(MerchantOrderByOptions.getOption(orderByOption)).limit(limitNumber);
+
+        CursorHelper<Merchant> cursorHelper = (CursorHelper<Merchant>) new CursorHelper<>(merchantTypeClass);
         CollectionResponse<Merchant> merchantResponse =
                 cursorHelper.queryAtCursor(query, cursorStr);
 
@@ -132,6 +132,6 @@ public class CustomerApi {
          @Named("cursorStr") @Nullable String cursorStr,
          @Named("merchantsOrderBy") MerchantsOrderBy merchantsOrderBy,
          @Named("limitNumber") int limitNumber){
-     return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantType.RESTAURANT,limitNumber);
+     return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantTypes.RESTAURANT,limitNumber);
  }*/
 }
