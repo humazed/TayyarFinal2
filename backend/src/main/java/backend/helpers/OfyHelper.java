@@ -1,5 +1,6 @@
 package backend.helpers;
 
+import backend.TestEntity;
 import backend.deliveryRequests.DeliveryRequest;
 import backend.general.Review;
 import backend.merchants.Category;
@@ -54,7 +55,7 @@ public class OfyHelper implements ServletContextListener {
         ObjectifyService.register(Driver.class);
         ObjectifyService.register(DeliveryRequest.class);
 
-
+        ObjectifyService.register(TestEntity.class);
 
     }
 

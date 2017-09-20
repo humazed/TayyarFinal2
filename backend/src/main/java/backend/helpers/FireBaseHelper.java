@@ -49,6 +49,7 @@ public class FireBaseHelper {
             httpURLConnection.setRequestProperty("Content-Type", type);
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setRequestProperty("Authorization", webApiKey);
+
             httpURLConnection.setDoOutput(true);
             OutputStream outputStream = httpURLConnection.getOutputStream();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
@@ -56,6 +57,7 @@ public class FireBaseHelper {
             outputStreamWriter.close();
             System.out.println(httpURLConnection.getResponseCode() + "  "
                     + httpURLConnection.getResponseMessage());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

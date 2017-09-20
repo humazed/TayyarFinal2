@@ -6,15 +6,19 @@
 
 package backend.apis;
 
+import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Date;
 import java.util.List;
 
+import backend.TestEntity;
 import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
 import backend.merchants.Category;
@@ -168,6 +172,7 @@ public class MerchantApi {
 
     @ApiMethod(name = "merchantAcceptsDeliveryRequest")
     public DeliveryRequest merchantAcceptsDeliveryRequest(@Named("deliveryRequestID") Long deliveryRequestID) {
+
         DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
         final Queue queue = QueueFactory.getQueue("driverQueue");
         queue.add(TaskOptions.Builder.withUrl("//GetTheNearestDriverServlet").
@@ -175,13 +180,28 @@ public class MerchantApi {
         return deliveryRequest;
     }
 
+    public void signUpWithFirebase() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+    }
 
     // testing methods
     //===========================================================================
+
+
     @ApiMethod(name = "createRandomMerchants")
     public List<Merchant> createRandomMerchants()  {
         final Queue queue = QueueFactory.getQueue("createMerchantsQueue");
         queue.add(TaskOptions.Builder.withUrl("/GenerateTestDataServlet"));
         return null;
     }
+
+    @ApiMethod(name = "createTestEntity")
+    public TestEntity createTestEntity(@Named("name") String name){
+        Date date1 = new Date();
+        System.out.println(date1);
+        TestEntity testEntity = new TestEntity(name,date1);
+        testEntity.saveTest();
+        return testEntity;
+    }
+
 }

@@ -81,8 +81,8 @@ public class CustomerApi {
     @ApiMethod(name = "getListOfMerchantsViewsOrderedBy")
     public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedBy(
             @Named("cursorStr") @Nullable String cursorStr,
-            @Named("orderByOption") String  orderByOption,
-            @Named("merchantType") String  merchantType,
+            @Named("orderByOption") String orderByOption,
+            @Named("merchantType") String merchantType,
             @Named("limitNumber") int limitNumber) {
 
         Class<? extends Merchant> merchantTypeClass = MerchantTypes.getMerchantTypeClass(merchantType);
@@ -118,6 +118,7 @@ public class CustomerApi {
                 deliveryRequestJson, new TypeToken<DeliveryRequest>() {
                 }.getType());
         deliveryRequest.save();
+
         FireBaseHelper.sendNotification(Merchant.getMerchantByID(
                 deliveryRequest.merchantId).getRegTokenList(),
                 String.valueOf(deliveryRequest.id));
@@ -126,7 +127,8 @@ public class CustomerApi {
         return deliveryRequest;
     }
 
- //testing methods
+
+    //testing methods
  /*@ApiMethod(name = "getListOfRestaurantsViewsOrderedBy",path = "getListOfRestaurantsViewsOrderedBy")
  public CollectionResponse<MerchantView> getListOfRestaurantsViewsOrderedBy(
          @Named("cursorStr") @Nullable String cursorStr,
@@ -134,4 +136,5 @@ public class CustomerApi {
          @Named("limitNumber") int limitNumber){
      return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantTypes.RESTAURANT,limitNumber);
  }*/
+
 }
