@@ -1,4 +1,11 @@
-<!-- Indices written at Sun, 6 Aug 2017 04:33:02 EET -->
+<!-- Indices written at Thu, 21 Sep 2017 22:29:34 EET -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 19 times in query history -->
+    <datastore-index kind="Merchant" ancestor="false" source="auto">
+        <property name="^i" direction="asc"/>
+        <property name="pricing" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

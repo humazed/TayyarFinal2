@@ -26,10 +26,16 @@ import backend.merchants.Choice;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.Option;
+import backend.merchants.dessertsMerchant.DessertsMerchant;
+import backend.merchants.dessertsMerchant.DessertsMerchantItem;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.restaurant.RestaurantItem;
+import backend.merchants.specialMerchant.SpecialMerchant;
+import backend.merchants.specialMerchant.SpecialMerchantItem;
+import backend.merchants.superMarket.SuperMarket;
+import backend.merchants.superMarket.SuperMarketItem;
 
 /**
  * An endpoint class we are exposing
@@ -49,7 +55,7 @@ public class MerchantApi {
      */
 
     @ApiMethod(name = "getMerchantById")
-    public Merchant getMerchantById(@Named("merchantId") Long merchantId){
+    public Merchant getMerchantById(@Named("merchantId") Long merchantId) {
         return Merchant.getMerchantByID(merchantId);
     }
 
@@ -72,6 +78,34 @@ public class MerchantApi {
         return pharmacy;
     }
 
+    @ApiMethod(name = "createSuperMarket")
+    public SuperMarket createSuperMarket(@Named("name") String name, @Named("email") String email,
+                                         @Named("phone") String phone, @Named("imageURL") String imageURL
+    ) {
+        SuperMarket superMarket = new SuperMarket(name, email, phone, imageURL);
+        superMarket.saveMerchant();
+        return superMarket;
+    }
+
+    @ApiMethod(name = "createDessertMerchant")
+    public DessertsMerchant createDessertsMerchant(@Named("name") String name, @Named("email") String email,
+                                                   @Named("phone") String phone, @Named("imageURL") String imageURL
+    ) {
+        DessertsMerchant dessertsMerchant = new DessertsMerchant(name, email, phone, imageURL);
+        dessertsMerchant.saveMerchant();
+        return dessertsMerchant;
+    }
+
+    @ApiMethod(name = "createSpecialMerchant")
+    public SpecialMerchant createSpecialMerchant(@Named("name") String name, @Named("email") String email,
+                                                 @Named("phone") String phone, @Named("imageURL") String imageURL
+    ) {
+        SpecialMerchant specialMerchant = new SpecialMerchant(name, email, phone, imageURL);
+        specialMerchant.saveMerchant();
+        return specialMerchant;
+    }
+    
+    //==================================================
 
     @ApiMethod(name = "createCategory")
     public Category createCategory(@Named("name") String name,
@@ -82,6 +116,8 @@ public class MerchantApi {
         category.saveCategory();
         return category;
     }
+    
+    //===========================================
 
     @ApiMethod(name = "createRestaurantItem")
     public RestaurantItem createRestaurantItem(@Named("name") String name,
@@ -99,6 +135,29 @@ public class MerchantApi {
         return item;
     }
 
+    @ApiMethod(name = "createSuperMarketItem")
+    public SuperMarketItem createSuperMarketItem(@Named("name") String name,
+                                                 @Named("basePrice") double basePrice) {
+        SuperMarketItem item = new SuperMarketItem(name, basePrice);
+        item.saveItem();
+        return item;
+    } 
+    @ApiMethod(name = "createDessertsMerchantItem")
+    public DessertsMerchantItem createDessertsMerchantItem(@Named("name") String name,
+                                                           @Named("basePrice") double basePrice) {
+        DessertsMerchantItem item = new DessertsMerchantItem(name, basePrice);
+        item.saveItem();
+        return item;
+    }
+    @ApiMethod(name = "createSpecialMerchantItem")
+    public SpecialMerchantItem createSpecialMerchantItem(@Named("name") String name,
+                                                         @Named("basePrice") double basePrice) {
+        SpecialMerchantItem item = new SpecialMerchantItem(name, basePrice);
+        item.saveItem();
+        return item;
+    }
+    
+    //=============================================
 
     @ApiMethod(name = "createOption")
     public Option createOption(@Named("name") String name,
@@ -176,7 +235,7 @@ public class MerchantApi {
         DeliveryRequest deliveryRequest = DeliveryRequest.getDeliveryRequestByID(deliveryRequestID);
         final Queue queue = QueueFactory.getQueue("driverQueue");
         queue.add(TaskOptions.Builder.withUrl("//GetTheNearestDriverServlet").
-                param("deliveryRequestId",deliveryRequest.toString()));
+                param("deliveryRequestId", deliveryRequest.toString()));
         return deliveryRequest;
     }
 
@@ -189,17 +248,17 @@ public class MerchantApi {
 
 
     @ApiMethod(name = "createRandomMerchants")
-    public List<Merchant> createRandomMerchants()  {
+    public List<Merchant> createRandomMerchants() {
         final Queue queue = QueueFactory.getQueue("createMerchantsQueue");
         queue.add(TaskOptions.Builder.withUrl("/GenerateTestDataServlet"));
         return null;
     }
 
     @ApiMethod(name = "createTestEntity")
-    public TestEntity createTestEntity(@Named("name") String name){
+    public TestEntity createTestEntity(@Named("name") String name) {
         Date date1 = new Date();
         System.out.println(date1);
-        TestEntity testEntity = new TestEntity(name,date1);
+        TestEntity testEntity = new TestEntity(name, date1);
         testEntity.saveTest();
         return testEntity;
     }

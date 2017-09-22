@@ -1,17 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+
     <servlet>
         <servlet-name>SystemServiceServlet</servlet-name>
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>backend.MyEndpoint</param-value>
+            <param-value>backend.apis.MerchantApi,
+                backend.apis.CustomerApi,
+                backend.apis.DriverApi
+            </param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>SystemServiceServlet</servlet-name>
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GenerateTestDataServlet</servlet-name>
+        <servlet-class>
+            backend.servlets.GenerateTestDataServlet
+        </servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenerateTestDataServlet</servlet-name>
+        <url-pattern>/GenerateTestDataServlet</url-pattern>
+    </servlet-mapping>
+
+<servlet>
+    <servlet-name>GetTheNearestDriverServlet</servlet-name>
+    <servlet-class>backend.servlets.GetTheNearestDriverServlet</servlet-class>
+</servlet>
+    <servlet-mapping>
+        <servlet-name>GetTheNearestDriverServlet</servlet-name>
+        <url-pattern>/GetTheNearestDriverServlet</url-pattern>
+    </servlet-mapping>
+    
     <!-- [START Objectify] -->
     <filter>
         <filter-name>ObjectifyFilter</filter-name>

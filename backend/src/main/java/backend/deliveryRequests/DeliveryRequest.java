@@ -4,6 +4,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -18,8 +19,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class DeliveryRequest {
     @Id
     public Long id;
+    @Index
     public Long customerId;
+    @Index
     public Long driverId;
+    @Index
     public Long merchantId;
     //time info;
     //location info
@@ -36,7 +40,7 @@ public class DeliveryRequest {
     public String generalInstructions;
 
     public DeliveryRequest(Long customerId, Long merchantId,
-                           List<OrderItem> orderItems,String generalInstructions) {
+                           List<OrderItem> orderItems, String generalInstructions) {
         this.customerId = customerId;
         this.merchantId = merchantId;
         this.orderItems = orderItems;

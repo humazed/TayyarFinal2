@@ -1,6 +1,7 @@
 package backend.helpers.pseudoEnums;
 
 import backend.merchants.Merchant;
+import backend.merchants.dessertsMerchant.DessertsMerchant;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.superMarket.SuperMarket;
@@ -24,6 +25,10 @@ public class MerchantTypes {
             case "supermarket":
                 merchantTypeClass = SuperMarket.class;
                 break;
+            case "dessertsmerchant":
+                merchantTypeClass = DessertsMerchant.class;
+                break;
+
             default:
                 throw new IllegalArgumentException("merchant type should be a restaurant, pharmacy, supermarket ");
         }

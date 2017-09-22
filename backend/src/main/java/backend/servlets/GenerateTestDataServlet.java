@@ -15,10 +15,12 @@ import backend.merchants.Choice;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.Option;
+import backend.merchants.dessertsMerchant.DessertsMerchant;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.restaurant.Restaurant;
 import backend.merchants.restaurant.RestaurantItem;
+import backend.merchants.specialMerchant.SpecialMerchant;
 import backend.merchants.superMarket.SuperMarket;
 import backend.merchants.superMarket.SuperMarketItem;
 
@@ -39,12 +41,18 @@ public class GenerateTestDataServlet extends HttpServlet {
             Restaurant restaurant = new Restaurant(i + " Restaurant " + i, "@", "010", "151aaa");
             Pharmacy pharmacy = new Pharmacy(i + " Pharmacy " + i, "@", "010", "151aaa");
             SuperMarket superMarket = new SuperMarket(i + " SuperMarket " + i, "@", "010", "151aaa");
+            DessertsMerchant dessertsMerchant = new DessertsMerchant(i + " dessertsMerchant " + i, "@", "010", "151aaa");
+            SpecialMerchant specialMerchant = new SpecialMerchant(i + " specialMerchant " + i, "@", "010", "151aaa");
             restaurant.saveMerchant();
             pharmacy.saveMerchant();
             superMarket.saveMerchant();
+            specialMerchant.saveMerchant();
+            dessertsMerchant.saveMerchant();
             merchantList.add(restaurant);
             merchantList.add(pharmacy);
             merchantList.add(superMarket);
+            merchantList.add(dessertsMerchant);
+            merchantList.add(specialMerchant);
         }
 
         for (Merchant merchant : merchantList) {
@@ -59,7 +67,7 @@ public class GenerateTestDataServlet extends HttpServlet {
                     if (merchant instanceof Restaurant) {
                         item = new RestaurantItem(k + " " + String.valueOf((char) ((int) 'a' + j)) + " Restaurant", Math.random() * 200);
                     } else if (merchant instanceof SuperMarket) {
-                        item = new SuperMarketItem(k + " " + String.valueOf((char) ((int) 'a' + j)) + " SuperMarket", Math.random() * 200);
+                        item = new SuperMarketItem(k + " " + String.valueOf((char) ((int) 'a' + j)) + " DessertsMerchant", Math.random() * 200);
                     } else {
                         item = new PharmacyItem(k + " " + String.valueOf((char) ((int) 'a' + j)) + " Pharmacy", Math.random() * 200);
                     }

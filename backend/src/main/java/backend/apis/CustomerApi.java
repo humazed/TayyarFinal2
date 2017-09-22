@@ -23,7 +23,7 @@ import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.profiles.customer.Customer;
 import backend.views.MenuView;
-import backend.merchants.pharmacy.MerchantView;
+import backend.merchants.MerchantView;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -80,7 +80,7 @@ public class CustomerApi {
 
     @ApiMethod(name = "getListOfMerchantsViewsOrderedBy")
     public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedBy(
-            @Named("cursorStr") @Nullable String cursorStr,
+            @Named("cursorStr")  String cursorStr,
             @Named("orderByOption") String orderByOption,
             @Named("merchantType") String merchantType,
             @Named("limitNumber") int limitNumber) {
@@ -90,6 +90,7 @@ public class CustomerApi {
         Query<Merchant> query = (Query<Merchant>) ofy().load().type(merchantTypeClass).
                 order(MerchantOrderByOptions.getOption(orderByOption)).limit(limitNumber);
 
+        cursorStr = cursorStr.toLowerCase().equals("null")? null:cursorStr;
         CursorHelper<Merchant> cursorHelper = (CursorHelper<Merchant>) new CursorHelper<>(merchantTypeClass);
         CollectionResponse<Merchant> merchantResponse =
                 cursorHelper.queryAtCursor(query, cursorStr);
@@ -127,6 +128,11 @@ public class CustomerApi {
         return deliveryRequest;
     }
 
+    @ApiMethod(name = "getDeliveryRequestsOfCustomer")
+    public List<DeliveryRequest> getDeliveryRequestsOfCustomer(@Named("customerID") Long customerID) {
+        return ofy().load().type(DeliveryRequest.class).filter("customerId =", customerID).list();
+    }
+
 
     //testing methods
  /*@ApiMethod(name = "getListOfRestaurantsViewsOrderedBy",path = "getListOfRestaurantsViewsOrderedBy")
@@ -136,5 +142,12 @@ public class CustomerApi {
          @Named("limitNumber") int limitNumber){
      return getListOfMerchantsViewsOrderedBy(cursorStr,merchantsOrderBy,MerchantTypes.RESTAURANT,limitNumber);
  }*/
+
+    @ApiMethod(name = "createDeliveryRequest")
+    public DeliveryRequest createDeliveryRequest(@Named("customerID") Long customerID) {
+        DeliveryRequest deliveryRequest = new DeliveryRequest(customerID, 100L, null, "blabla");
+        deliveryRequest.save();
+        return deliveryRequest;
+    }
 
 }
