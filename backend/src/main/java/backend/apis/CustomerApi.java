@@ -3,10 +3,11 @@ package backend.apis;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
-import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.google.appengine.api.datastore.Category;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 
 import java.io.IOException;
@@ -18,9 +19,10 @@ import backend.helpers.CursorHelper;
 import backend.helpers.FireBaseHelper;
 import backend.helpers.pseudoEnums.MerchantOrderByOptions;
 import backend.helpers.pseudoEnums.MerchantTypes;
-import backend.merchants.Category;
+import backend.merchants.MerchantCategory;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
+import backend.merchants.inventoryCategory.Inventory;
 import backend.profiles.customer.Customer;
 import backend.views.MenuView;
 import backend.merchants.MerchantView;
@@ -80,7 +82,7 @@ public class CustomerApi {
 
     @ApiMethod(name = "getListOfMerchantsViewsOrderedBy")
     public CollectionResponse<MerchantView> getListOfMerchantsViewsOrderedBy(
-            @Named("cursorStr")  String cursorStr,
+            @Named("cursorStr") String cursorStr,
             @Named("orderByOption") String orderByOption,
             @Named("merchantType") String merchantType,
             @Named("limitNumber") int limitNumber) {
@@ -90,7 +92,7 @@ public class CustomerApi {
         Query<Merchant> query = (Query<Merchant>) ofy().load().type(merchantTypeClass).
                 order(MerchantOrderByOptions.getOption(orderByOption)).limit(limitNumber);
 
-        cursorStr = cursorStr.toLowerCase().equals("null")? null:cursorStr;
+        cursorStr = cursorStr.toLowerCase().equals("null") ? null : cursorStr;
         CursorHelper<Merchant> cursorHelper = (CursorHelper<Merchant>) new CursorHelper<>(merchantTypeClass);
         CollectionResponse<Merchant> merchantResponse =
                 cursorHelper.queryAtCursor(query, cursorStr);
@@ -110,7 +112,7 @@ public class CustomerApi {
 
     @ApiMethod(name = "getItemsOfCategoryByID")
     public List<Item> getItemsOfCategoryByID(@Named("categoryID") Long categoryID) {
-        return Category.getCategoryByID(categoryID).getItems();
+        return MerchantCategory.getCategoryByID(categoryID).getItems();
     }
 
     @ApiMethod(name = "sendDeliveryRequest")
@@ -132,6 +134,56 @@ public class CustomerApi {
     public List<DeliveryRequest> getDeliveryRequestsOfCustomer(@Named("customerID") Long customerID) {
         return ofy().load().type(DeliveryRequest.class).filter("customerId =", customerID).list();
     }
+
+
+    @ApiMethod(name = "getListOfMerchantsByCategoryNameOrderedBy", path = "getListOfMerchantsByCategoryNameOrderedBy")
+    public CollectionResponse<MerchantView> getListOfMerchantsByCategoryNameOrderedBy
+            (@Named("categoryName") String categoryName,
+             @Named("cursorStr") String cursorStr,
+             @Named("orderByOption") String orderByOption,
+             @Named("limitNumber") int limitNumber) {
+
+        Query<Merchant> query = ofy().load().type(Merchant.class).
+                filter("actualCategories", categoryName).order(orderByOption).limit(limitNumber);
+
+        cursorStr = cursorStr.toLowerCase().equals("null") ? null : cursorStr;
+
+        CursorHelper<Merchant> cursorHelper = new CursorHelper<>(Merchant.class);
+        CollectionResponse<Merchant> merchantResponse =
+                cursorHelper.queryAtCursor(query, cursorStr);
+
+        List<MerchantView> result = MerchantView
+                .getListOfMerchantsViews((List<Merchant>) merchantResponse.getItems());
+
+        CollectionResponse<MerchantView> response = cursorHelper.buildCollectionResponse(result);
+        return response;
+    }
+
+
+    @ApiMethod(name = "getListOfItemsByCategoryNameOrderedBy", path = "getListOfItemsByCategoryNameOrderedBy")
+    public CollectionResponse<Item> getListOfItemsByCategoryNameOrderedBy
+            (@Named("categoryName") String categoryName,
+             @Named("cursorStr") String cursorStr,
+             @Named("orderByOption") String orderByOption,
+             @Named("limitNumber") int limitNumber) {
+
+        Query<Item> query = ofy().load().type(Item.class).
+                filter("actualCategories", categoryName).order(orderByOption).limit(limitNumber);
+
+        cursorStr = cursorStr.toLowerCase().equals("null") ? null : cursorStr;
+
+        CursorHelper<Item> cursorHelper = new CursorHelper<>(Item.class);
+        CollectionResponse<Item> response =
+                cursorHelper.queryAtCursor(query, cursorStr);
+
+        return response;
+    }
+
+    @ApiMethod(name = "getInventory")
+    public Inventory getInventory(){
+        return ofy().load().type(Inventory.class).list().get(0);
+    }
+
 
 
     //testing methods

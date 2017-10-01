@@ -6,7 +6,6 @@
 
 package backend.apis;
 
-import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
@@ -15,19 +14,21 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import backend.TestEntity;
 import backend.deliveryRequests.DeliveryRequest;
+import backend.general.Viewable;
 import backend.helpers.Constants;
-import backend.merchants.Category;
+import backend.merchants.MerchantCategory;
 import backend.merchants.Choice;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.Option;
 import backend.merchants.dessertsMerchant.DessertsMerchant;
 import backend.merchants.dessertsMerchant.DessertsMerchantItem;
+import backend.merchants.inventoryCategory.Inventory;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.restaurant.Restaurant;
@@ -36,6 +37,8 @@ import backend.merchants.specialMerchant.SpecialMerchant;
 import backend.merchants.specialMerchant.SpecialMerchantItem;
 import backend.merchants.superMarket.SuperMarket;
 import backend.merchants.superMarket.SuperMarketItem;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * An endpoint class we are exposing
@@ -104,20 +107,26 @@ public class MerchantApi {
         specialMerchant.saveMerchant();
         return specialMerchant;
     }
-    
+
     //==================================================
 
     @ApiMethod(name = "createCategory")
-    public Category createCategory(@Named("name") String name,
-                                   @Named("description") String description,
-                                   @Named("imageURL") String imageURL
+    public MerchantCategory createCategory(@Named("name") String name,
+                                           @Named("description") String description,
+                                           @Named("imageURL") String imageURL
     ) {
-        Category category = new Category(name, description, imageURL);
-        category.saveCategory();
-        return category;
+        MerchantCategory merchantCategory = new MerchantCategory(name, description, imageURL);
+        merchantCategory.saveCategory();
+        return merchantCategory;
     }
-    
+
     //===========================================
+    @ApiMethod(name = "createInventoryCategories")
+    public Inventory createInventoryCategories() {
+        Inventory inventory = new Inventory();
+        inventory.save();
+        return inventory;
+    }
 
     @ApiMethod(name = "createRestaurantItem")
     public RestaurantItem createRestaurantItem(@Named("name") String name,
@@ -141,7 +150,8 @@ public class MerchantApi {
         SuperMarketItem item = new SuperMarketItem(name, basePrice);
         item.saveItem();
         return item;
-    } 
+    }
+
     @ApiMethod(name = "createDessertsMerchantItem")
     public DessertsMerchantItem createDessertsMerchantItem(@Named("name") String name,
                                                            @Named("basePrice") double basePrice) {
@@ -149,6 +159,7 @@ public class MerchantApi {
         item.saveItem();
         return item;
     }
+
     @ApiMethod(name = "createSpecialMerchantItem")
     public SpecialMerchantItem createSpecialMerchantItem(@Named("name") String name,
                                                          @Named("basePrice") double basePrice) {
@@ -156,7 +167,7 @@ public class MerchantApi {
         item.saveItem();
         return item;
     }
-    
+
     //=============================================
 
     @ApiMethod(name = "createOption")
@@ -180,20 +191,52 @@ public class MerchantApi {
     }
 
 
-    @ApiMethod(name = "addCategoryToMerchant")
-    public Merchant addCategoryToMerchant(@Named("merchantID") Long merchantID,
-                                          @Named("categoryID") Long categoryID) {
+    @ApiMethod(name = "addMenuCategoryToMerchant")
+    public Merchant addMenuCategoryToMerchant(@Named("merchantID") Long merchantID,
+                                              @Named("categoryID") Long categoryID) {
         Merchant merchant = Merchant.getMerchantByID(merchantID);
-        merchant.addCategory(categoryID);
+        merchant.addMenuCategory(categoryID);
         return merchant;
     }
 
+    @ApiMethod(name = "addListOfActualCategoriesToMerchantOrItem")
+    public Viewable addListOfActualCategoriesToMerchantOrItem(@Named("merchantOrItemID") Long merchantOrItemID,
+                                                        @Named("categoryName") String categoriesNamesCSV,
+                                                        @Named("type") String type) {
+        List<String> categories = Arrays.asList(categoriesNamesCSV.split(","));
+        Viewable merchantOrItem = null;
+        if (type.equalsIgnoreCase("m")) {
+            Merchant merchant = Merchant.getMerchantByID(merchantOrItemID);
+            merchant.addListOfActualCategoriesToMerchant(categories);
+            merchantOrItem = merchant;
+        }
+        else if (type.equalsIgnoreCase("i")){
+            Item item = Item.getItemByID(merchantOrItemID);
+            item.addListOfActualCategoriesToItem(categories);
+            merchantOrItem = item;
+        }
+        return merchantOrItem;
+    }
+
+
+    @ApiMethod(name = "addCategoryToInventoryCategories")
+    public Inventory addCategoryToInventoryCategories(@Named("categoryName") String categoryName,
+                                                      @Named("InventoryCategoriesID") Long invCatID,
+                                                      @Named("type") String type) {
+        Inventory inventory = Inventory.getInventoryCategoriesByID(invCatID);
+        if (type.equalsIgnoreCase("m")) {
+            inventory.addMerchantCategory(categoryName);
+        } else if (type.equalsIgnoreCase("i")) {
+            inventory.addItemCategory(categoryName);
+        }
+        return inventory;
+    }
 
     @ApiMethod(name = "addItemToCategory")
-    public Category addItemToCategory(@Named("categoryID") Long categoryID, @Named("itemID") Long itemID) {
-        Category category = Category.getCategoryByID(categoryID);
-        category.addItem(itemID);
-        return category;
+    public MerchantCategory addItemToCategory(@Named("categoryID") Long categoryID, @Named("itemID") Long itemID) {
+        MerchantCategory merchantCategory = MerchantCategory.getCategoryByID(categoryID);
+        merchantCategory.addItem(itemID);
+        return merchantCategory;
     }
 
 
@@ -219,7 +262,7 @@ public class MerchantApi {
 
     @ApiMethod(name = "getItemsOfCategoryByID")
     public List<Item> getItemsOfCategoryByID(@Named("categoryID") Long categoryID) {
-        return Category.getCategoryByID(categoryID).getItems();
+        return MerchantCategory.getCategoryByID(categoryID).getItems();
     }
 
 
@@ -256,11 +299,17 @@ public class MerchantApi {
 
     @ApiMethod(name = "createTestEntity")
     public TestEntity createTestEntity(@Named("name") String name) {
-        Date date1 = new Date();
-        System.out.println(date1);
-        TestEntity testEntity = new TestEntity(name, date1);
+        TestEntity testEntity = new TestEntity(name);
         testEntity.saveTest();
         return testEntity;
     }
 
+    @ApiMethod(name = "getTestEntityByCategories")
+    public List<TestEntity> getTestEntityByCategories(@Named("category") String categoryName) {
+        List<TestEntity> testEntities = ofy().load().type(TestEntity.class).filter("categories", categoryName).list();
+        for (TestEntity entity : testEntities) {
+            System.out.println(entity);
+        }
+        return testEntities;
+    }
 }
