@@ -1,0 +1,387 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/N07yhVDZJ_cUOfaAET5eu2AhP4w\"",
+ "discoveryVersion": "v1",
+ "id": "driverApi:v1",
+ "name": "driverApi",
+ "version": "v1",
+ "description": "This is an API",
+ "icons": {
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://tayyar-trial.appspot.com/_ah/api/driverApi/v1/",
+ "basePath": "/_ah/api/driverApi/v1/",
+ "rootUrl": "https://tayyar-trial.appspot.com/_ah/api/",
+ "servicePath": "driverApi/v1/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "DeliveryRequest": {
+   "id": "DeliveryRequest",
+   "type": "object",
+   "properties": {
+    "charge": {
+     "type": "number",
+     "format": "double"
+    },
+    "customerId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "distanceDriverDrived": {
+     "type": "number",
+     "format": "double"
+    },
+    "driverAcceptsOrder": {
+     "type": "boolean"
+    },
+    "driverConfirmedPickUP": {
+     "type": "boolean"
+    },
+    "driverId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "driversWhoRefusedIDs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "int64"
+     }
+    },
+    "generalInstructions": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "merchantAcceptsOrder": {
+     "type": "boolean"
+    },
+    "merchantId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "orderDelivered": {
+     "type": "boolean"
+    },
+    "timeDriverSpent": {
+     "type": "number",
+     "format": "double"
+    },
+    "tip": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  },
+  "Driver": {
+   "id": "Driver",
+   "type": "object",
+   "properties": {
+    "balance": {
+     "type": "number",
+     "format": "double"
+    },
+    "currentLocation": {
+     "$ref": "Location"
+    },
+    "deviceMac": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "idle": {
+     "type": "boolean"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "imageURl": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "rate": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "vehicle": {
+     "type": "string"
+    },
+    "wifiMac": {
+     "type": "string"
+    }
+   }
+  },
+  "Location": {
+   "id": "Location",
+   "type": "object",
+   "properties": {
+    "address": {
+     "type": "string"
+    },
+    "city": {
+     "type": "string"
+    },
+    "latitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitude": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  }
+ },
+ "methods": {
+  "createDriver": {
+   "id": "driverApi.createDriver",
+   "path": "createDriver/{name}/{email}/{phone}/{vehicle}/{imageURL}",
+   "httpMethod": "POST",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "imageURL": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "name": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "phone": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "vehicle": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "phone",
+    "vehicle",
+    "imageURL"
+   ],
+   "response": {
+    "$ref": "Driver"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "driverAcceptsDeliveryRequest": {
+   "id": "driverApi.driverAcceptsDeliveryRequest",
+   "path": "driverAcceptsDeliveryRequest/{deliveryRequestId}/{driverId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    },
+    "driverId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestId",
+    "driverId"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "driverConfirmsPickUp": {
+   "id": "driverApi.driverConfirmsPickUp",
+   "path": "driverConfirmsPickUp/{deliveryRequestId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestId"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "driverDeliveredOrder": {
+   "id": "driverApi.driverDeliveredOrder",
+   "path": "driverDeliveredOrder/{deliveryRequestId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestId"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "driverRefuseDeliveryRequest": {
+   "id": "driverApi.driverRefuseDeliveryRequest",
+   "path": "driverRefuseDeliveryRequest/{deliveryRequestId}/{driverId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    },
+    "driverId": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestId",
+    "driverId"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "driverRefusesDelivery": {
+   "id": "driverApi.driverRefusesDelivery",
+   "path": "driverRefusesDelivery/{deliveryRequestID}/{driverID}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    },
+    "driverID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestID",
+    "driverID"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}

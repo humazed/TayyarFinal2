@@ -1,0 +1,730 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/G-S3wsT_twZGg7VcTji3yqOuOHE\"",
+ "discoveryVersion": "v1",
+ "id": "customerApi:v1",
+ "name": "customerApi",
+ "version": "v1",
+ "description": "This is an API",
+ "icons": {
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://tayyar-trial.appspot.com/_ah/api/customerApi/v1/",
+ "basePath": "/_ah/api/customerApi/v1/",
+ "rootUrl": "https://tayyar-trial.appspot.com/_ah/api/",
+ "servicePath": "customerApi/v1/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "CollectionResponse_Item": {
+   "id": "CollectionResponse_Item",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Item"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_MerchantView": {
+   "id": "CollectionResponse_MerchantView",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "MerchantView"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "Customer": {
+   "id": "Customer",
+   "type": "object",
+   "properties": {
+    "currentLocation": {
+     "$ref": "Location"
+    },
+    "deviceMac": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURl": {
+     "type": "string"
+    },
+    "mainAddress": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "numberOfOrders": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "totalAmountOfMoneySpent": {
+     "type": "number",
+     "format": "double"
+    },
+    "wifiMac": {
+     "type": "string"
+    }
+   }
+  },
+  "DeliveryRequest": {
+   "id": "DeliveryRequest",
+   "type": "object",
+   "properties": {
+    "charge": {
+     "type": "number",
+     "format": "double"
+    },
+    "customerId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "distanceDriverDrived": {
+     "type": "number",
+     "format": "double"
+    },
+    "driverAcceptsOrder": {
+     "type": "boolean"
+    },
+    "driverConfirmedPickUP": {
+     "type": "boolean"
+    },
+    "driverId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "driversWhoRefusedIDs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "int64"
+     }
+    },
+    "generalInstructions": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "merchantAcceptsOrder": {
+     "type": "boolean"
+    },
+    "merchantId": {
+     "type": "string",
+     "format": "int64"
+    },
+    "orderDelivered": {
+     "type": "boolean"
+    },
+    "timeDriverSpent": {
+     "type": "number",
+     "format": "double"
+    },
+    "tip": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  },
+  "DeliveryRequestCollection": {
+   "id": "DeliveryRequestCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "DeliveryRequest"
+     }
+    }
+   }
+  },
+  "Item": {
+   "id": "Item",
+   "type": "object",
+   "properties": {
+    "available": {
+     "type": "boolean"
+    },
+    "basePrice": {
+     "type": "number",
+     "format": "double"
+    },
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "ItemCollection": {
+   "id": "ItemCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Item"
+     }
+    }
+   }
+  },
+  "Location": {
+   "id": "Location",
+   "type": "object",
+   "properties": {
+    "address": {
+     "type": "string"
+    },
+    "city": {
+     "type": "string"
+    },
+    "latitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitude": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  },
+  "MenuElement": {
+   "id": "MenuElement",
+   "type": "object",
+   "properties": {
+    "categoryID": {
+     "type": "string",
+     "format": "int64"
+    },
+    "categoryName": {
+     "type": "string"
+    },
+    "imageURL": {
+     "type": "string"
+    }
+   }
+  },
+  "MenuView": {
+   "id": "MenuView",
+   "type": "object",
+   "properties": {
+    "menuElements": {
+     "type": "array",
+     "items": {
+      "$ref": "MenuElement"
+     }
+    }
+   }
+  },
+  "Merchant": {
+   "id": "Merchant",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "city": {
+     "type": "string"
+    },
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "regTokenList": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "MerchantView": {
+   "id": "MerchantView",
+   "type": "object",
+   "properties": {
+    "active": {
+     "type": "boolean"
+    },
+    "imageURL": {
+     "type": "string"
+    },
+    "merchantID": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    },
+    "pricing": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "rating": {
+     "type": "integer",
+     "format": "int32"
+    }
+   }
+  },
+  "MerchantViewCollection": {
+   "id": "MerchantViewCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "MerchantView"
+     }
+    }
+   }
+  }
+ },
+ "methods": {
+  "createCustomer": {
+   "id": "customerApi.createCustomer",
+   "path": "createCustomer/{name}/{email}/{mainAddress}/{phone}",
+   "httpMethod": "POST",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "mainAddress": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "name": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "phone": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "name",
+    "email",
+    "mainAddress",
+    "phone"
+   ],
+   "response": {
+    "$ref": "Customer"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "createDeliveryRequest": {
+   "id": "customerApi.createDeliveryRequest",
+   "path": "createDeliveryRequest/{customerID}",
+   "httpMethod": "POST",
+   "parameters": {
+    "customerID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "customerID"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getDeliveryRequestsOfCustomer": {
+   "id": "customerApi.getDeliveryRequestsOfCustomer",
+   "path": "deliveryrequestcollection/{customerID}",
+   "httpMethod": "GET",
+   "parameters": {
+    "customerID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "customerID"
+   ],
+   "response": {
+    "$ref": "DeliveryRequestCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getItemsOfCategoryByID": {
+   "id": "customerApi.getItemsOfCategoryByID",
+   "path": "itemcollection/{categoryID}",
+   "httpMethod": "GET",
+   "parameters": {
+    "categoryID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "categoryID"
+   ],
+   "response": {
+    "$ref": "ItemCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getListOfItemsByCategoryNameOrderedBy": {
+   "id": "customerApi.getListOfItemsByCategoryNameOrderedBy",
+   "path": "getListOfItemsByCategoryNameOrderedBy",
+   "httpMethod": "GET",
+   "parameters": {
+    "categoryName": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    },
+    "cursorStr": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    },
+    "limitNumber": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "query"
+    },
+    "orderByOption": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    }
+   },
+   "parameterOrder": [
+    "categoryName",
+    "cursorStr",
+    "limitNumber",
+    "orderByOption"
+   ],
+   "response": {
+    "$ref": "CollectionResponse_Item"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getListOfMerchantsByCategoryNameOrderedBy": {
+   "id": "customerApi.getListOfMerchantsByCategoryNameOrderedBy",
+   "path": "getListOfMerchantsByCategoryNameOrderedBy",
+   "httpMethod": "GET",
+   "parameters": {
+    "categoryName": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    },
+    "cursorStr": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    },
+    "limitNumber": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "query"
+    },
+    "orderByOption": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    }
+   },
+   "parameterOrder": [
+    "categoryName",
+    "cursorStr",
+    "limitNumber",
+    "orderByOption"
+   ],
+   "response": {
+    "$ref": "CollectionResponse_MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getListOfMerchantsViewsOrderedBy": {
+   "id": "customerApi.getListOfMerchantsViewsOrderedBy",
+   "path": "collectionresponse_merchantview/{cursorStr}/{orderByOption}/{merchantType}/{limitNumber}",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursorStr": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "limitNumber": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
+    "merchantType": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "orderByOption": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "cursorStr",
+    "orderByOption",
+    "merchantType",
+    "limitNumber"
+   ],
+   "response": {
+    "$ref": "CollectionResponse_MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getMerchantByID": {
+   "id": "customerApi.getMerchantByID",
+   "path": "merchant/{merchantID}",
+   "httpMethod": "GET",
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "response": {
+    "$ref": "Merchant"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getMerchantByName": {
+   "id": "customerApi.getMerchantByName",
+   "path": "merchantviewcollection/{name}",
+   "httpMethod": "GET",
+   "parameters": {
+    "name": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "name"
+   ],
+   "response": {
+    "$ref": "MerchantViewCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getMerchantMenuByID": {
+   "id": "customerApi.getMerchantMenuByID",
+   "path": "menuview/{merchantID}",
+   "httpMethod": "GET",
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "response": {
+    "$ref": "MenuView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getMerchantViewByID": {
+   "id": "customerApi.getMerchantViewByID",
+   "path": "merchantview/{merchantID}",
+   "httpMethod": "GET",
+   "parameters": {
+    "merchantID": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "merchantID"
+   ],
+   "response": {
+    "$ref": "MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "sendDeliveryRequest": {
+   "id": "customerApi.sendDeliveryRequest",
+   "path": "sendDeliveryRequest/{deliveryRequestJson}",
+   "httpMethod": "POST",
+   "parameters": {
+    "deliveryRequestJson": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "deliveryRequestJson"
+   ],
+   "response": {
+    "$ref": "DeliveryRequest"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}

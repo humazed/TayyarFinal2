@@ -1,0 +1,11 @@
+<queue-entries>
+    <queue>
+        <name>driverQueue</name>
+        <rate>1/s</rate>
+    </queue>
+
+    <queue>
+        <name>createMerchantsQueue</name>
+        <rate>1/s</rate>
+    </queue>
+</queue-entries>
