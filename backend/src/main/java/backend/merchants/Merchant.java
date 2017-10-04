@@ -16,6 +16,7 @@ import backend.general.Location;
 import backend.general.Notifiable;
 import backend.general.Review;
 import backend.general.Viewable;
+import backend.merchants.inventory.Inventory;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -33,11 +34,19 @@ public abstract class Merchant implements Notifiable, Viewable {
     public String phone;
     @Index
     public String city;
+    @Index
+    public  boolean browsable = false;
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<Key<Review>> reviews = new ArrayList<Key<Review>>();
     public Location location;
+    @Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Key<Category>> categories = new ArrayList<Key<Category>>();
+    public List<Key<MerchantCategory>> menuCategories = new ArrayList<Key<MerchantCategory>>();
+
+    @Index
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public List<String> actualCategories = new ArrayList<>();
+
     public String imageURL;
     @Index
     public int pricing;
@@ -48,7 +57,8 @@ public abstract class Merchant implements Notifiable, Viewable {
 
 
     //default constructor for Entity initialization
-    public Merchant() {}
+    public Merchant() {
+    }
 
     public static Merchant getMerchantByID(Long id) {
         return ofy().load().type(Merchant.class).id(id).now();
@@ -65,22 +75,44 @@ public abstract class Merchant implements Notifiable, Viewable {
         ofy().save().entity(this).now();
     }
 
-    public void addCategory(Long categoryID) {
-        Key<Category> categoryKey = Key.create(Category.class, categoryID);
-        this.categories.add(categoryKey);
+    public void addMenuCategory(Long categoryID) {
+        Key<MerchantCategory> categoryKey = Key.create(MerchantCategory.class, categoryID);
+        this.menuCategories.add(categoryKey);
         saveMerchant();// save changes in this Merchant
     }
 
-    public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
-        for (Key<Category> categoryKey : this.categories) {
-            Category category = ofy().load().key(categoryKey).now();
-            categories.add(category);
+    public void addActualCategory(String actualCategoryName) {
+        //throws array out of boundary
+        if (Inventory.getInventoryCategoriesByMerchantCategory(actualCategoryName) != null) {
+            this.actualCategories.add(actualCategoryName);
+            saveMerchant();// save changes in this Merchant}
+        }
+    }
+
+    public void addListOfActualCategoriesToMerchant(List<String> actualCategories) {
+        //throws java.lang.reflect.UndeclaredThrowableException
+        for (String actualCategoryName : actualCategories) {
+            //TODO get list of Inventory Categories and store it instead of this datastore hit
+            if (Inventory.getInventoryCategoriesByMerchantCategory(actualCategoryName) != null) {
+                if (!this.actualCategories.contains(actualCategoryName)) {
+                    this.actualCategories.add(actualCategoryName);
+                }
+            }
+        }
+        saveMerchant();// save changes in this Merchant}
+    }
+
+    public List<MerchantCategory> getMenuCategories() {
+        List<MerchantCategory> categories = new ArrayList<>();
+        for (Key<MerchantCategory> categoryKey : this.menuCategories) {
+            MerchantCategory merchantCategory = ofy().load().key(categoryKey).now();
+            categories.add(merchantCategory);
         }
         /*todo try another approach by passing all keys at once,
          notice that the query, isn't executed until .now()*/
         return categories;
     }
+
     public static List<Merchant> getMerchantByName(@Named("name") String name) {
         Query<Merchant> query = ObjectifyService.ofy().load().type(Merchant.class).
                 filter("name =", name).order("pricing");
@@ -103,4 +135,5 @@ public abstract class Merchant implements Notifiable, Viewable {
     public List<String> getRegTokenList() {
         return this.regTokenList;
     }
+
 }

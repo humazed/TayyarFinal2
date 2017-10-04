@@ -10,10 +10,11 @@ import backend.merchants.Merchant;
  */
 @Subclass(index = true)
 @Cache
-public class SuperMarket extends Merchant {
+public class SuperMarket extends Merchant{
 
     //default constructor for Entity initialization
-    public SuperMarket (){}
+    public SuperMarket (){
+    }
     //============
 
     public SuperMarket(String name, String email, String phone, String imageURL) {

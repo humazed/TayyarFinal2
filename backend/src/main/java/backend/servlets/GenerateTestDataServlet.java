@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import backend.apis.MerchantApi;
-import backend.merchants.Category;
+import backend.merchants.MerchantCategory;
 import backend.merchants.Choice;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.Option;
 import backend.merchants.dessertsMerchant.DessertsMerchant;
+import backend.merchants.inventory.Inventory;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.restaurant.Restaurant;
@@ -36,6 +36,14 @@ public class GenerateTestDataServlet extends HttpServlet {
     }
 
     void createMerchants() {
+        Inventory inventory = new Inventory();
+        inventory.addMerchantCategory("pizza");
+        inventory.addMerchantCategory("ice cream");
+        inventory.addMerchantCategory("fast food");
+        inventory.addMerchantCategory("Mexican");
+        inventory.addMerchantCategory("saucy");
+        inventory.addMerchantCategory("burger");
+
         List<Merchant> merchantList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Restaurant restaurant = new Restaurant(i + " Restaurant " + i, "@", "010", "151aaa");
@@ -54,14 +62,19 @@ public class GenerateTestDataServlet extends HttpServlet {
             merchantList.add(dessertsMerchant);
             merchantList.add(specialMerchant);
         }
-
+        for (Merchant merchant : merchantList) {
+            int random = (int) (inventory.merchantCategoriesNames.size()*Math.random()-1);
+            for (int i = 0; i < random; i++) {
+                merchant.addActualCategory(inventory.merchantCategoriesNames.get(i));
+            }
+        }
         for (Merchant merchant : merchantList) {
             merchant.pricing = (int) (Math.random() * 10);
             merchant.addRegToken("regToken Holder");
             for (int j = 0; j < 4; j++) {
-                Category category = new Category(j + " " + String.valueOf((char) ((int) 'a' + j)), "bla", "imageURL");
-                category.saveCategory();
-                merchant.addCategory(category.id);
+                MerchantCategory merchantCategory = new MerchantCategory(j + " " + String.valueOf((char) ((int) 'a' + j)), "bla", "imageURL");
+                merchantCategory.saveCategory();
+                merchant.addMenuCategory(merchantCategory.id);
                 for (int k = 0; k < 6; k++) {
                     Item item;
                     if (merchant instanceof Restaurant) {
@@ -84,9 +97,9 @@ public class GenerateTestDataServlet extends HttpServlet {
                         option.saveOption();
                     }
                     item.saveItem();
-                    category.addItem(item.id);
+                    merchantCategory.addItem(item.id);
                 }
-                category.saveCategory();
+                merchantCategory.saveCategory();
                 merchant.saveMerchant();
             }
         }

@@ -28,7 +28,7 @@ import backend.merchants.Merchant;
 import backend.merchants.Option;
 import backend.merchants.dessertsMerchant.DessertsMerchant;
 import backend.merchants.dessertsMerchant.DessertsMerchantItem;
-import backend.merchants.inventoryCategory.Inventory;
+import backend.merchants.inventory.Inventory;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.restaurant.Restaurant;

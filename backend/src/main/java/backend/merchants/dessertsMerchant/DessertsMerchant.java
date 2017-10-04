@@ -11,12 +11,15 @@ import backend.merchants.Merchant;
 @Subclass(index = true)
 @Cache
 public class DessertsMerchant extends Merchant {
-
     //default constructor for Entity initialization
-    public DessertsMerchant(){}
+    public DessertsMerchant() {
+        this.browsable = true;
+
+    }
     //============
 
     public DessertsMerchant(String name, String email, String phone, String imageURL) {
         super(name, email, phone, imageURL);
+        this.browsable = true;
     }
 }

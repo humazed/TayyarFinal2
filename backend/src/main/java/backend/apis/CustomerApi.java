@@ -4,14 +4,13 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.CollectionResponse;
-import com.google.appengine.api.datastore.Category;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Filter;
 
 import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
@@ -22,7 +21,7 @@ import backend.helpers.pseudoEnums.MerchantTypes;
 import backend.merchants.MerchantCategory;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
-import backend.merchants.inventoryCategory.Inventory;
+import backend.merchants.inventory.Inventory;
 import backend.profiles.customer.Customer;
 import backend.views.MenuView;
 import backend.merchants.MerchantView;
@@ -180,10 +179,27 @@ public class CustomerApi {
     }
 
     @ApiMethod(name = "getInventory")
-    public Inventory getInventory(){
+    public Inventory getInventory() {
         return ofy().load().type(Inventory.class).list().get(0);
     }
 
+    @ApiMethod(name = "getFeedOfTopMerchants")
+    public CollectionResponse<MerchantView> getFeedOfTopMerchants(@Named("cursorStr") String cursorStr,
+                                                                  @Named("orderByOption") String orderByOption,
+                                                                  @Named("limitNumber") int limitNumber) {
+        Query<Merchant> query = ofy().load().type(Merchant.class)
+                .filter("browsable",true).order(orderByOption).limit(limitNumber);
+        cursorStr = cursorStr.toLowerCase().equals("null") ? null : cursorStr;
+
+        CursorHelper<Merchant> cursorHelper = new CursorHelper<>(Merchant.class);
+        CollectionResponse<Merchant> merchantResponse =
+                cursorHelper.queryAtCursor(query, cursorStr);
+
+        List<MerchantView> result = MerchantView
+                .getListOfMerchantsViews((List<Merchant>) merchantResponse.getItems());
+        CollectionResponse<MerchantView> response = cursorHelper.buildCollectionResponse(result);
+        return response;
+    }
 
 
     //testing methods

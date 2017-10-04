@@ -1,13 +1,13 @@
 package backend.helpers;
 
 import backend.TestEntity;
-import backend.deliveryRequests.DeliveryRequest;
 import backend.general.Review;
-import backend.merchants.Category;
+import backend.merchants.MerchantCategory;
 import backend.merchants.Choice;
 import backend.merchants.Item;
 import backend.merchants.Merchant;
 import backend.merchants.dessertsMerchant.DessertsMerchant;
+import backend.merchants.inventory.Inventory;
 import backend.merchants.pharmacy.Pharmacy;
 import backend.merchants.pharmacy.PharmacyItem;
 import backend.merchants.Option;
@@ -40,7 +40,7 @@ public class OfyHelper implements ServletContextListener {
         ObjectifyService.register(Pharmacy.class);
         ObjectifyService.register(SuperMarket.class);
 
-        ObjectifyService.register(Category.class);
+        ObjectifyService.register(MerchantCategory.class);
 
         ObjectifyService.register(Item.class);
         ObjectifyService.register(RestaurantItem.class);
@@ -57,7 +57,7 @@ public class OfyHelper implements ServletContextListener {
         ObjectifyService.register(Profile.class);
         ObjectifyService.register(Customer.class);
         ObjectifyService.register(Driver.class);
-
+        ObjectifyService.register(Inventory.class);
         ObjectifyService.register(TestEntity.class);
 
     }

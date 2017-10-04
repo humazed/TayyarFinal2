@@ -10,13 +10,18 @@ import backend.merchants.Merchant;
  */
 @Subclass(index = true)
 @Cache
-public class SpecialMerchant extends Merchant {
+public class SpecialMerchant extends Merchant  {
 
     //default constructor for Entity initialization
-    public SpecialMerchant(){}
+    public SpecialMerchant(){
+
+        this.browsable = true;
+    }
     //============
 
     public SpecialMerchant(String name, String email, String phone, String imageURL) {
         super(name, email, phone, imageURL);
+
+        this.browsable = true;
     }
 }

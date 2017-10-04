@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import backend.general.Viewable;
-import backend.merchants.Category;
+import backend.merchants.MerchantCategory;
 import backend.merchants.Merchant;
 /**
  * Created by Muhammad Saeed on 3/24/2017.
@@ -15,10 +15,10 @@ public class MenuView implements Viewable{
 
     //internal uses
     public MenuView(Merchant merchant) {
-        List<Category> categoryList = merchant.getCategories();
-        for (Category category : categoryList) {
-            MenuElement menuElement = new MenuElement(category.id, category.name,
-                    category.imageURL);
+        List<MerchantCategory> merchantCategoryList = merchant.getMenuCategories();
+        for (MerchantCategory merchantCategory : merchantCategoryList) {
+            MenuElement menuElement = new MenuElement(merchantCategory.id, merchantCategory.name,
+                    merchantCategory.imageURL);
             this.menuElements.add(menuElement);
         }
     }

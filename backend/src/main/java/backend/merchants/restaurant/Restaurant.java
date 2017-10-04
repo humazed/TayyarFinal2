@@ -14,9 +14,11 @@ public class Restaurant extends Merchant {
 
     //default constructor for Entity initalization
     public Restaurant() {
+        this.browsable = true;
     }
 
     public Restaurant(String name, String email, String phone, String imageURL) {
         super(name, email, phone, imageURL);
+        this.browsable = true;
     }
 }
