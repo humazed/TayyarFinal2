@@ -201,16 +201,15 @@ public class MerchantApi {
 
     @ApiMethod(name = "addListOfActualCategoriesToMerchantOrItem")
     public Viewable addListOfActualCategoriesToMerchantOrItem(@Named("merchantOrItemID") Long merchantOrItemID,
-                                                        @Named("categoryName") String categoriesNamesCSV,
-                                                        @Named("type") String type) {
+                                                              @Named("categoryName") String categoriesNamesCSV,
+                                                              @Named("type") String type) {
         List<String> categories = Arrays.asList(categoriesNamesCSV.split(","));
         Viewable merchantOrItem = null;
         if (type.equalsIgnoreCase("m")) {
             Merchant merchant = Merchant.getMerchantByID(merchantOrItemID);
             merchant.addListOfActualCategoriesToMerchant(categories);
             merchantOrItem = merchant;
-        }
-        else if (type.equalsIgnoreCase("i")){
+        } else if (type.equalsIgnoreCase("i")) {
             Item item = Item.getItemByID(merchantOrItemID);
             item.addListOfActualCategoriesToItem(categories);
             merchantOrItem = item;
@@ -295,13 +294,6 @@ public class MerchantApi {
         final Queue queue = QueueFactory.getQueue("createMerchantsQueue");
         queue.add(TaskOptions.Builder.withUrl("/GenerateTestDataServlet"));
         return null;
-    }
-
-    @ApiMethod(name = "createTestEntity")
-    public TestEntity createTestEntity(@Named("name") String name) {
-        TestEntity testEntity = new TestEntity(name);
-        testEntity.saveTest();
-        return testEntity;
     }
 
     @ApiMethod(name = "getTestEntityByCategories")

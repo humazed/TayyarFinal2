@@ -6,7 +6,6 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,7 +14,6 @@ import backend.deliveryRequests.DeliveryRequest;
 import backend.helpers.Constants;
 import backend.helpers.FireBaseHelper;
 import backend.merchants.Merchant;
-import backend.profiles.Profile;
 import backend.profiles.customer.Customer;
 import backend.profiles.driver.Driver;
 

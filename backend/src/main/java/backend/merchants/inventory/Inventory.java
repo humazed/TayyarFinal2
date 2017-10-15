@@ -25,6 +25,8 @@ public class Inventory {
 
     //default constructor for Entity initialization
     public Inventory() {
+        this.addMerchantCategory("seafood");
+        this.addMerchantCategory("fast food");
     }
     //============
 

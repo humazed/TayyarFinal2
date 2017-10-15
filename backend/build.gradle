@@ -37,12 +37,13 @@ dependencies {
 
 appengine {
     downloadSdk = true
-    httpPort = 8085
+    httpPort = 8086
     appcfg {
         oauth2 = true
     }
     endpoints {
         getClientLibsOnBuild = true
         getDiscoveryDocsOnBuild = true
+        googleClientVersion = '1.23.0'
     }
 }

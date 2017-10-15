@@ -43,6 +43,7 @@ public class GenerateTestDataServlet extends HttpServlet {
         inventory.addMerchantCategory("Mexican");
         inventory.addMerchantCategory("saucy");
         inventory.addMerchantCategory("burger");
+        inventory.save();
 
         List<Merchant> merchantList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -68,6 +69,7 @@ public class GenerateTestDataServlet extends HttpServlet {
                 merchant.addActualCategory(inventory.merchantCategoriesNames.get(i));
             }
         }
+
         for (Merchant merchant : merchantList) {
             merchant.pricing = (int) (Math.random() * 10);
             merchant.addRegToken("regToken Holder");

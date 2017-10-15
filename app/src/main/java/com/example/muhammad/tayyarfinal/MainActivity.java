@@ -1,23 +1,19 @@
 package com.example.muhammad.tayyarfinal;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.appspot.tayyar_trial.customerApi.CustomerApi;
 import com.appspot.tayyar_trial.customerApi.model.CollectionResponseMerchantView;
-import com.appspot.tayyar_trial.customerApi.model.MerchantView;
+import com.appspot.tayyar_trial.merchantApi.MerchantApi;
 import com.appspot.tayyar_trial.merchantApi.model.MerchantCollection;
-import com.appspot.tayyar_trial.merchantApi.model.Pharmacy;
-import com.appspot.tayyar_trial.merchantApi.model.Restaurant;
 import com.example.muhammad.tayyarfinal.okkhttp.OkHttpTransport;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
-
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -30,26 +26,29 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                    System.out.println(MainActivity.this.createTestRestaurant());
-                    System.out.println("waiting ...");
-                    Thread.sleep(2000);
-                    for (MerchantView merchantView : getListOfMerchants("null").getItems()) {
-                        System.out.println(merchantView);
-                    }
-                    System.out.println(getListOfMerchants("null").getNextPageToken());
+                MerchantApi.Builder builder = new MerchantApi.Builder(new OkHttpTransport().createRequestFactory().getTransport(),
+                        new AndroidJsonFactory(), null)
+                        // options for running against local devappserver
+                        // - 10.0.2.2 is localhost's IP address in Android emulator
+                        // - turn off compression when running against local devappserver
+//                        .setRootUrl("https://hello-muhammad.appspot.com/_ah/api/")
+                        .setRootUrl("https://tayyar-quota.appspot.com/_ah/api/")
+                        //                       .setRootUrl("http://10.0.2.2:8086/_ah/api/")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);
+                            }
+                        });
 
-                    System.out.println("again aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                    String cursStr = getListOfMerchants("null").getNextPageToken();
-                    for (MerchantView merchantView : getListOfMerchants(cursStr).getItems()) {
-                        System.out.println(merchantView);
-                    }
+                MerchantApi merchantApiService = builder.build();
+
+                try {
+                    List<String> merchantCategoriesNames = merchantApiService.createInventoryCategories().execute().getMerchantCategoriesNames();
+                    Log.d(TAG, "merchantCategoriesNames = " + merchantCategoriesNames);
 
                 } catch (IOException e) {
-                    Log.e(TAG, "onCreate: ", e);
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "onCreate: ", e);
+                    e.printStackTrace();
                 }
             }
         }).start();

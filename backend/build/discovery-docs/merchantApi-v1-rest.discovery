@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/lfDQXzPzboT25L2zV_U2kyxOL0Y\"",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/XCgAMM6TIaV8sOQB-gt_x_KS6gk\"",
  "discoveryVersion": "v1",
  "id": "merchantApi:v1",
  "name": "merchantApi",
@@ -161,6 +161,9 @@
     "active": {
      "type": "boolean"
     },
+    "browsable": {
+     "type": "boolean"
+    },
     "city": {
      "type": "string"
     },
@@ -225,8 +228,8 @@
     }
    }
   },
-  "InventoryCategories": {
-   "id": "InventoryCategories",
+  "Inventory": {
+   "id": "Inventory",
    "type": "object",
    "properties": {
     "id": {
@@ -310,6 +313,9 @@
    "type": "object",
    "properties": {
     "active": {
+     "type": "boolean"
+    },
+    "browsable": {
      "type": "boolean"
     },
     "city": {
@@ -407,6 +413,9 @@
     "active": {
      "type": "boolean"
     },
+    "browsable": {
+     "type": "boolean"
+    },
     "city": {
      "type": "string"
     },
@@ -476,6 +485,9 @@
    "type": "object",
    "properties": {
     "active": {
+     "type": "boolean"
+    },
+    "browsable": {
      "type": "boolean"
     },
     "city": {
@@ -549,6 +561,9 @@
     "active": {
      "type": "boolean"
     },
+    "browsable": {
+     "type": "boolean"
+    },
     "city": {
      "type": "string"
     },
@@ -620,6 +635,9 @@
     "active": {
      "type": "boolean"
     },
+    "browsable": {
+     "type": "boolean"
+    },
     "city": {
      "type": "string"
     },
@@ -686,15 +704,7 @@
   },
   "TestEntity": {
    "id": "TestEntity",
-   "type": "object",
-   "properties": {
-    "categories": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    }
-   }
+   "type": "object"
   },
   "TestEntityCollection": {
    "id": "TestEntityCollection",
@@ -742,7 +752,7 @@
     "type"
    ],
    "response": {
-    "$ref": "InventoryCategories"
+    "$ref": "Inventory"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
@@ -1037,7 +1047,7 @@
    "path": "createInventoryCategories",
    "httpMethod": "POST",
    "response": {
-    "$ref": "InventoryCategories"
+    "$ref": "Inventory"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
@@ -1350,27 +1360,6 @@
    ],
    "response": {
     "$ref": "SuperMarketItem"
-   },
-   "scopes": [
-    "https://www.googleapis.com/auth/userinfo.email"
-   ]
-  },
-  "createTestEntity": {
-   "id": "merchantApi.createTestEntity",
-   "path": "createTestEntity/{name}",
-   "httpMethod": "POST",
-   "parameters": {
-    "name": {
-     "type": "string",
-     "required": true,
-     "location": "path"
-    }
-   },
-   "parameterOrder": [
-    "name"
-   ],
-   "response": {
-    "$ref": "TestEntity"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

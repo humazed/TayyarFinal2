@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/G-S3wsT_twZGg7VcTji3yqOuOHE\"",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/ybvS1lVboW3TAxyPtCi_rnMWTeE\"",
  "discoveryVersion": "v1",
  "id": "customerApi:v1",
  "name": "customerApi",
@@ -221,6 +221,28 @@
     }
    }
   },
+  "Inventory": {
+   "id": "Inventory",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "itemsCategoriesNames": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "merchantCategoriesNames": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
   "Item": {
    "id": "Item",
    "type": "object",
@@ -312,6 +334,9 @@
    "type": "object",
    "properties": {
     "active": {
+     "type": "boolean"
+    },
+    "browsable": {
      "type": "boolean"
     },
     "city": {
@@ -471,6 +496,51 @@
    ],
    "response": {
     "$ref": "DeliveryRequestCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getFeedOfTopMerchants": {
+   "id": "customerApi.getFeedOfTopMerchants",
+   "path": "collectionresponse_merchantview/{cursorStr}/{orderByOption}/{limitNumber}",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursorStr": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "limitNumber": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
+    "orderByOption": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "cursorStr",
+    "orderByOption",
+    "limitNumber"
+   ],
+   "response": {
+    "$ref": "CollectionResponse_MerchantView"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getInventory": {
+   "id": "customerApi.getInventory",
+   "path": "inventory",
+   "httpMethod": "GET",
+   "response": {
+    "$ref": "Inventory"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

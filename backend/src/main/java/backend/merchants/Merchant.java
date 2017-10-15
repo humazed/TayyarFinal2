@@ -43,6 +43,7 @@ public abstract class Merchant implements Notifiable, Viewable {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<Key<MerchantCategory>> menuCategories = new ArrayList<Key<MerchantCategory>>();
 
+
     @Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public List<String> actualCategories = new ArrayList<>();
